@@ -12,18 +12,20 @@ def App():
     
     #to hold all tiles from the map
     platforms = Group()
-    walls = Group()
+    leftWalls = Group()
+    rightWalls = Group()
     
     #create our map level
-    map = Map(screen,'resources/map.txt',platforms,walls)
+    map = Map(screen,'resources/map.txt',platforms,leftWalls,rightWalls)
     
     while True:
         screen.fill((0,0,0))
         e.checkEvents(mario,platforms)
-        e.checkCollisions(mario,platforms,walls)
+        e.checkCollisions(mario,platforms,leftWalls,rightWalls)
         platforms.update()
-        walls.update()
-        mario.update(platforms,walls)
+        leftWalls.update()
+        rightWalls.update()
+        mario.update(platforms,leftWalls,rightWalls)
         pygame.display.flip()
 
 App()                 
