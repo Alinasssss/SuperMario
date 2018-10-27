@@ -43,7 +43,8 @@ def checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls):
             #print 'floor collides'
             mario.vel.y = 0
             mario.pos.y = feetCollision[0].rect.top+1
-    
+            mario.airborne = False
+            
     #mario is jumping check if colllision with his head
     if mario.vel.y < 0:
         headCollision = pygame.sprite.spritecollide(mario,platformsBottom,False)

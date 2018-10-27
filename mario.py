@@ -10,11 +10,6 @@ class Mario(Sprite):
     def __init__(self,screen):
         super(Mario,self).__init__()
 
-        self.jumpLimit = 200
-        
-        #helper info for which side a collision has occured
-        self.collisionSide = 'top'
-        
         #get the screen dims
         self.screen = screen
         self.screenRect = self.screen.get_rect()
@@ -23,19 +18,16 @@ class Mario(Sprite):
         self.image = pygame.image.load('resources/smallMario.gif')
         self.rect = self.image.get_rect()
 
-        #viewport left and right boundaries
+        #viewport left boundary
         self.viewLeft = 0
-        
 
         #control vertical and horizontal velocity
         self.pos = vector(self.screenRect.width / 2, self.screenRect.height)
         self.vel = vector(0,0)
         self.acc = vector(0,0)
+        self.airborne = False
+
         
-        #initially start mario here
-        #self.rect.centerx = self.screenRect.left + 100
-        #self.rect.centery = self.screenRect.bottom - 50
-    
     def jump(self,platformsTop):
         #slightly move mario down to see if there is a collision below him
         #if true, he is on the floor platform and allow him to jump
@@ -44,6 +36,7 @@ class Mario(Sprite):
         self.rect.y -= 1.1
         if hits:
             self.vel.y = -1.7
+            self.airborne = True
             
             #play jump sound effect
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('resources/sounds/jump.wav'))
@@ -69,7 +62,7 @@ class Mario(Sprite):
         keys = pygame.key.get_pressed()
 
         if changed:
-            self.pos.x -= abs(self.vel.x + 0.4)
+            self.pos.x -= abs(self.vel.x + 0.8)
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
                 if groups.rect.x == 0:
@@ -91,7 +84,8 @@ class Mario(Sprite):
         keys = pygame.key.get_pressed()
 
 
-        #update accelaration depending on when mario is running on walking
+        #update acceleration depending on when mario is running or walking
+
         if keys[pygame.K_RIGHT] and keys[pygame.K_s]:
             #running right
             self.acc.x = PLAYER_RUN_ACCELERATION
@@ -103,11 +97,19 @@ class Mario(Sprite):
         if keys[pygame.K_LEFT] and keys[pygame.K_s]:
             #running left
             self.acc.x = -PLAYER_RUN_ACCELERATION
+           
         elif keys[pygame.K_LEFT]:
             #walking left
             self.acc.x = -PLAYER_WALK_ACCELERATION
-    
-        #friction only applies in the x direction
+            
+        #make mario lose momentum if he is already in the air
+        #and trying to move in the opposite direciton
+        if keys[pygame.K_LEFT] and self.airborne and self.vel.x > 0:
+            self.acc.x = DECELLERATION_ON_AIR
+
+        if keys[pygame.K_RIGHT] and self.airborne and self.vel.x < 0:
+            self.acc.x = -DECELLERATION_ON_AIR
+            
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
@@ -115,6 +117,11 @@ class Mario(Sprite):
         self.rect.midbottom = self.pos
 
         self.viewport(viewport)
+
+        if self.pos.y > self.screenRect.height:
+            self.pos.y = self.screenRect.height - 100
+            self.pos.x = self.pos.x - 100
+        
                    
         
         self.blitme()

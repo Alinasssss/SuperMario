@@ -16,11 +16,13 @@ def App():
 
     mario = Mario(screen)
     
-    #to hold all tiles from the map
+    #to hold all tiles from the map, these can be used to mask any game object
     platformsTop = Group()
     platformsBottom = Group()
     leftWalls = Group()
     rightWalls = Group()
+
+    #actual game objects
     floorTiles = Group()
     
     #create a viewport and pass all objects into it for
