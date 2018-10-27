@@ -1,61 +1,68 @@
 import pygame
-import sys
-from  mario import Mario
+from mario import Mario
 from pygame.sprite import Group
 from map import Map
-import events as e 
+import events as e
 
-def App():
+from entity_gamemaster import EntityGameMaster
+from mushroom import Mushroom
 
-    #initialie sound mixer
+
+def run_game():
+    # initialize sound mixer
     pygame.mixer.pre_init(22050, -16, 2, 512)
     pygame.mixer.init()
 
-    screen = pygame.display.set_mode((800,600))
-    screen_rect = screen.get_rect()
+    screen = pygame.display.set_mode((800, 600))
+    # screen_rect = screen.get_rect()
 
-    mario = Mario(screen)
+    entity_gamemaster = EntityGameMaster()
+    mushroom = Mushroom(screen)
+    entity_gamemaster.mushrooms.add(mushroom)
+
+    mario = Mario(screen, entity_gamemaster)
     
-    #to hold all tiles from the map
-    platformsTop = Group()
-    platformsBottom = Group()
-    leftWalls = Group()
-    rightWalls = Group()
-    floorTiles = Group()
+    # to hold all tiles from the map
+    platforms_top = Group()
+    platforms_bottom = Group()
+    left_walls = Group()
+    right_walls = Group()
+    floor_tiles = Group()
     
-    #create a viewport and pass all objects into it for
-    #easier management
+    # create a viewport and pass all objects into it for
+    # easier management
     viewport = Group()
 
-    #create our map level and all objects within it
-    map = Map(screen,'resources/map.txt',platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles)
+    # create our map level and all objects within it
+    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles)
 
-    #pass all objects groups into viewport so that
-    #they get updated with mario x movement
-    #creating a scrolling effect
-    viewport.add(platformsTop)
-    viewport.add(platformsBottom)
-    viewport.add(leftWalls)
-    viewport.add(rightWalls)
-    viewport.add(floorTiles)
+    # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
+    viewport.add(platforms_top)
+    viewport.add(platforms_bottom)
+    viewport.add(left_walls)
+    viewport.add(right_walls)
+    viewport.add(floor_tiles)
         
     while True:
-        screen.fill((0,0,0))
-        e.checkEvents(mario,platformsTop)
-        e.checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls)
+        screen.fill((0, 0, 0))
 
-        #each collision part is independently handled------------------
-        platformsTop.update()
-        platformsBottom.update()
-        leftWalls.update()
-        rightWalls.update()
-        #--------------------------------------------------------------
+        entity_gamemaster.update()
+        e.check_events(mario, platforms_top)
+        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls)
+
+        # each collision part is independently handled------------------
+        platforms_top.update()
+        platforms_bottom.update()
+        left_walls.update()
+        right_walls.update()
+        # --------------------------------------------------------------
         
-        #actual game objects, images, sprites, etc....................
-        floorTiles.update()
-        #-------------------------------------------------------------
+        # actual game objects, images, sprites, etc....................
+        floor_tiles.update()
+        # -------------------------------------------------------------
 
         mario.update(viewport)
         pygame.display.flip()
 
-App()                 
+
+run_game()
