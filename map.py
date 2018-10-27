@@ -2,30 +2,43 @@ import pygame
 from tiles import Tiles
 
 class Map:
-    def __init__(self,screen,fileMap,platforms,leftWalls,rightWalls,floorTiles):
+    def __init__(self,screen,fileMap,platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles):
         file = open(fileMap, 'r')
         lines = file.readlines()
 
-        x = -16
+        x = 0
         y = 0
 
         for line in lines:
             for p in line:
                 if p == 'f':
 
-                    #create a w sided rectangle, with top and bottom collidible with head and feet
-                    # and left and right wall collidible with mario right or left
+                    #create a 4 sided rectangle, with top collidable with marios feet
+                    # bottom collidable with mario head
+                    # and left and right wall collidable with mario right or left
+
+                    #4 sided rectangle with independent collidable parts----------
+                    # this will serve as a mask for every game object that needs to
+                    # be collidable
                     platformTop = Tiles(screen,x,y,'platform')
                     platformBottom = Tiles(screen,x,y+32,'platform')
-                    wallLeft = Tiles(screen,x-19,y+28,'wall')
-                    wallRight = Tiles(screen,x+18,y+28,'wall')
+                    wallLeft = Tiles(screen,x-17,y+28,'wall')
+                    wallRight = Tiles(screen,x+15,y+28,'wall')
+                    #-------------------------------------------------------------
+
+
+                    #game object representation of floor tile
                     floorTile = Tiles(screen,x+1,y+32,'floor')
 
-                    platforms.add(platformTop)
-                    platforms.add(platformBottom)
+                    platformsTop.add(platformTop)
+                    platformsBottom.add(platformBottom)
                     leftWalls.add(wallLeft)
                     rightWalls.add(wallRight)
                     floorTiles.add(floorTile)
+
+                #continue adding if statement for objects you
+                #want to add in the map.txt file,
+                 
 
                 if p == 'w':
                     ''''''

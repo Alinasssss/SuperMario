@@ -5,23 +5,23 @@ from map import Map
 import random
 
 
-def checkEvents(mario,platforms):
+def checkEvents(mario,platformsTop):
 
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            checkKeyDown(event,mario,platforms)
+            checkKeyDown(event,mario,platformsTop)
         elif event.type == pygame.KEYUP:
             checkKeyUp(event,mario)
         
-def checkKeyDown(event,mario,platforms):
+def checkKeyDown(event,mario,platformsTop):
         
     #character jumps only when he is on the floor
     #this prevents him from doing multiple jumps
     #while on the air
     if event.key == pygame.K_d:
-        mario.jump(platforms)
+        mario.jump(platformsTop)
             
     if event.key == pygame.K_DOWN:
         if mario.onFloor:
@@ -34,27 +34,24 @@ def checkKeyUp(event,mario):
     if event.key == pygame.K_d:
         mario.jumpHeightAdjust()
 
-def checkCollisions(mario,platforms,leftWalls,rightWalls):
+def checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls):
 
-
-    #check head collision and set velocity in the y direction to 0, so that
-    #mario stops going up
-    #when there is a collision, set marios y position to the block botttom y coordinate
-
+    #mario is coming down after having jumped, colide with top platform
     if mario.vel.y > 0:
-        feetCollision = pygame.sprite.spritecollide(mario,platforms,False)
+        feetCollision = pygame.sprite.spritecollide(mario,platformsTop,False)
         if feetCollision:
             #print 'floor collides'
             mario.vel.y = 0
             mario.pos.y = feetCollision[0].rect.top+1
     
-
+    #mario is jumping check if colllision with his head
     if mario.vel.y < 0:
-        headCollision = pygame.sprite.spritecollide(mario,platforms,False)
+        headCollision = pygame.sprite.spritecollide(mario,platformsBottom,False)
         if headCollision:
             print 'head collides'
             mario.vel.y = mario.vel.y * -1
             mario.pos.y = headCollision[0].rect.bottom + 36
+
     
     #when mario is moving in the right direction, his velocity is greater than 0, 
     #check for collisions with wall
@@ -62,6 +59,7 @@ def checkCollisions(mario,platforms,leftWalls,rightWalls):
     if mario.vel.x > 0:
         wallCollision = pygame.sprite.spritecollide(mario,leftWalls,False)
         if wallCollision:
+            print 'left wall collision'
             mario.vel.x = 0
             mario.pos.x = wallCollision[0].rect.left - 12
     
@@ -71,6 +69,7 @@ def checkCollisions(mario,platforms,leftWalls,rightWalls):
     if mario.vel.x < 0:
         wallCollision = pygame.sprite.spritecollide(mario,rightWalls,False)
         if wallCollision:
+            print 'right wall collision'
             mario.vel.x = 0
             mario.pos.x = wallCollision[0].rect.right + 12
     
