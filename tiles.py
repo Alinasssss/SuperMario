@@ -15,7 +15,8 @@ class Tiles(Sprite):
             self.image = pygame.image.load('resources/floor.gif')
         if type == 'wall':
             self.image = pygame.image.load('resources/wall.gif')
-
+        if type == 'floor':
+            self.image = pygame.image.load('resources/floorTile.gif')
 
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width

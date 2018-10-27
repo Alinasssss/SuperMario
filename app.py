@@ -14,9 +14,10 @@ def App():
     platforms = Group()
     leftWalls = Group()
     rightWalls = Group()
+    floorTiles = Group()
     
     #create our map level
-    map = Map(screen,'resources/map.txt',platforms,leftWalls,rightWalls)
+    map = Map(screen,'resources/map.txt',platforms,leftWalls,rightWalls,floorTiles)
     
     while True:
         screen.fill((0,0,0))
@@ -25,6 +26,7 @@ def App():
         platforms.update()
         leftWalls.update()
         rightWalls.update()
+        floorTiles.update()
         mario.update(platforms,leftWalls,rightWalls)
         pygame.display.flip()
 

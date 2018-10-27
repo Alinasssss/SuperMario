@@ -2,7 +2,7 @@ import pygame
 from tiles import Tiles
 
 class Map:
-    def __init__(self,screen,fileMap,platforms,leftWalls,rightWalls):
+    def __init__(self,screen,fileMap,platforms,leftWalls,rightWalls,floorTiles):
         file = open(fileMap, 'r')
         lines = file.readlines()
 
@@ -19,11 +19,14 @@ class Map:
                     platformBottom = Tiles(screen,x,y+32,'platform')
                     wallLeft = Tiles(screen,x-19,y+28,'wall')
                     wallRight = Tiles(screen,x+18,y+28,'wall')
+                    floorTile = Tiles(screen,x+1,y+32,'floor')
 
                     platforms.add(platformTop)
                     platforms.add(platformBottom)
                     leftWalls.add(wallLeft)
                     rightWalls.add(wallRight)
+                    floorTiles.add(floorTile)
+
                 if p == 'w':
                     ''''''
                                     
