@@ -24,13 +24,15 @@ def App():
 
     #actual game objects
     floorTiles = Group()
+    brickTiles = Group()
+    mysteryTiles = Group()
     
     #create a viewport and pass all objects into it for
     #easier management
     viewport = Group()
 
     #create our map level and all objects within it
-    map = Map(screen,'resources/map.txt',platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles)
+    map = Map(screen,'resources/map.txt',platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles, brickTiles, mysteryTiles)
 
     #pass all objects groups into viewport so that
     #they get updated with mario x movement
@@ -40,6 +42,8 @@ def App():
     viewport.add(leftWalls)
     viewport.add(rightWalls)
     viewport.add(floorTiles)
+    viewport.add(brickTiles)
+    viewport.add(mysteryTiles)
         
     while True:
         screen.fill((0,0,0))
@@ -55,6 +59,8 @@ def App():
         
         #actual game objects, images, sprites, etc....................
         floorTiles.update()
+        brickTiles.update()
+        mysteryTiles.update()
         #-------------------------------------------------------------
 
         mario.update(viewport)
