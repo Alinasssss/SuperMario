@@ -2,10 +2,10 @@ import pygame
 from pygame.sprite import Sprite
 
 
-class Mushroom(Sprite):
+class Starman(Sprite):
 
     def __init__(self, screen, platform_tops, left_walls, right_walls):
-        super(Mushroom, self).__init__()
+        super(Starman, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -23,12 +23,10 @@ class Mushroom(Sprite):
 
         self.velocity_x = 0
         self.velocity_y = 0.1
-        self.gravity = 0.001
+        self.gravity = 0.002
         self.horizontal_speed = 0.2
 
     def update(self):
-        self.previous_centery = self.centery
-
         self.centerx += self.velocity_x
 
         self.centery += self.velocity_y
@@ -37,8 +35,7 @@ class Mushroom(Sprite):
         colliding_with_floor = pygame.sprite.spritecollideany(self, self.platform_tops)
         if colliding_with_floor:
             self.velocity_x = self.horizontal_speed
-            self.velocity_y = 0
-            self.centery = self.previous_centery
+            self.velocity_y = -0.6
 
         colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
         colliding_with_left_wall = pygame.sprite.spritecollideany(self, self.left_walls)

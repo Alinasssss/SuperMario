@@ -2,10 +2,10 @@ import pygame
 from pygame.sprite import Sprite
 
 
-class Mushroom(Sprite):
+class OneUpMushroom(Sprite):
 
     def __init__(self, screen, platform_tops, left_walls, right_walls):
-        super(Mushroom, self).__init__()
+        super(OneUpMushroom, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -16,7 +16,7 @@ class Mushroom(Sprite):
         self.image = pygame.image.load('resources/smallMario.gif')
         self.rect = self.image.get_rect()
 
-        self.rect.center = (400, 400)
+        self.rect.center = (400, 0)
         self.centerx = self.rect.centerx
         self.centery = self.rect.centery
         self.previous_centery = self.centery

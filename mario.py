@@ -82,6 +82,21 @@ class Mario(Sprite):
         if collisions:
             print("I-ya got eet-uh")
 
+    def check_fireflower_collisions(self):
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True)
+        if collisions:
+            print("Atsa spicy")
+
+    def check_one_up_mushroom_collisions(self):
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.one_up_mushrooms, True)
+        if collisions:
+            print("One man")
+
+    def check_starman_collisions(self):
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.starmen, True)
+        if collisions:
+            print("Du du du dudu du dudududu")
+
     def update(self, viewport):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         self.acc = vector(0, GRAVITY)
@@ -116,6 +131,9 @@ class Mario(Sprite):
         self.blitme()
 
         self.check_mushroom_collisions()
+        self.check_fireflower_collisions()
+        self.check_one_up_mushroom_collisions()
+        self.check_starman_collisions()
 
     def blitme(self):
         # print self.rect.centerx

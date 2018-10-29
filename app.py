@@ -6,6 +6,9 @@ import events as e
 
 from entity_gamemaster import EntityGameMaster
 from mushroom import Mushroom
+from fireflower import Fireflower
+from one_up_mushroom import OneUpMushroom
+from starman import Starman
 
 
 def run_game():
@@ -15,12 +18,6 @@ def run_game():
 
     screen = pygame.display.set_mode((800, 600))
     # screen_rect = screen.get_rect()
-
-    entity_gamemaster = EntityGameMaster()
-    mushroom = Mushroom(screen)
-    entity_gamemaster.mushrooms.add(mushroom)
-
-    mario = Mario(screen, entity_gamemaster)
     
     # to hold all tiles from the map
     platforms_top = Group()
@@ -42,11 +39,24 @@ def run_game():
     viewport.add(left_walls)
     viewport.add(right_walls)
     viewport.add(floor_tiles)
+
+    entity_gamemaster = EntityGameMaster()
+    mushroom = Mushroom(screen, floor_tiles, left_walls, right_walls)
+    fireflower = Fireflower(screen)
+    one_up_mushroom = OneUpMushroom(screen, floor_tiles, left_walls, right_walls)
+    starman = Starman(screen, floor_tiles, left_walls, right_walls)
+    entity_gamemaster.mushrooms.add(mushroom)
+    entity_gamemaster.fireflowers.add(fireflower)
+    entity_gamemaster.one_up_mushrooms.add(one_up_mushroom)
+    entity_gamemaster.starmen.add(starman)
+
+    mario = Mario(screen, entity_gamemaster)
         
     while True:
         screen.fill((0, 0, 0))
 
         entity_gamemaster.update()
+
         e.check_events(mario, platforms_top)
         e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls)
 
