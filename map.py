@@ -2,7 +2,7 @@ import pygame
 from tiles import Tiles
 
 class Map:
-    def __init__(self,screen,fileMap,platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles,brickTiles, mysteryTiles):
+    def __init__(self,screen,fileMap,platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles):
         file = open(fileMap, 'r')
         lines = file.readlines()
 
@@ -40,34 +40,9 @@ class Map:
                 #want to add in the map.txt file,
                  
 
-                if p == 'b':
-                    platformTop = Tiles(screen,x,y,'platform')
-                    platformBottom = Tiles(screen,x,y+32,'platform')
-                    wallLeft = Tiles(screen,x-17,y+28,'wall')
-                    wallRight = Tiles(screen,x+15,y+28,'wall')
-
-                    brickTile = Tiles(screen,x,y+32,'brick')
-
-                    platformsTop.add(platformTop)
-                    platformsBottom.add(platformBottom)
-                    leftWalls.add(wallLeft)
-                    rightWalls.add(wallRight)
-                    brickTiles.add(brickTile)
-
-                if p == 'm':
-                    platformTop = Tiles(screen,x,y,'platform')
-                    platformBottom = Tiles(screen,x,y+32,'platform')
-                    wallLeft = Tiles(screen,x-17,y+28,'wall')
-                    wallRight = Tiles(screen,x+15,y+28,'wall')
-
-                    mysteryTile = Tiles(screen,x,y+32,'mystery')
-
-                    platformsTop.add(platformTop)
-                    platformsBottom.add(platformBottom)
-                    leftWalls.add(wallLeft)
-                    rightWalls.add(wallRight)
-                    mysteryTiles.add(mysteryTile)
-
+                if p == 'w':
+                    ''''''
+                                    
                 if p == '\n':
                     y += 32
                 x += 32

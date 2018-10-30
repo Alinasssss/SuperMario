@@ -4,6 +4,7 @@ from  mario import Mario
 from pygame.sprite import Group
 from map import Map
 import events as e 
+from settings import BLACK, WIDTH, HEIGHT
 
 def App():
 
@@ -11,7 +12,7 @@ def App():
     pygame.mixer.pre_init(22050, -16, 2, 512)
     pygame.mixer.init()
 
-    screen = pygame.display.set_mode((800,600))
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
     screen_rect = screen.get_rect()
 
     mario = Mario(screen)
@@ -24,15 +25,13 @@ def App():
 
     #actual game objects
     floorTiles = Group()
-    brickTiles = Group()
-    mysteryTiles = Group()
     
     #create a viewport and pass all objects into it for
     #easier management
     viewport = Group()
 
     #create our map level and all objects within it
-    map = Map(screen,'resources/map.txt',platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles, brickTiles, mysteryTiles)
+    map = Map(screen,'resources/map.txt',platformsTop,platformsBottom,leftWalls,rightWalls,floorTiles)
 
     #pass all objects groups into viewport so that
     #they get updated with mario x movement
@@ -42,11 +41,9 @@ def App():
     viewport.add(leftWalls)
     viewport.add(rightWalls)
     viewport.add(floorTiles)
-    viewport.add(brickTiles)
-    viewport.add(mysteryTiles)
         
     while True:
-        screen.fill((0,0,0))
+        screen.fill(BLACK)
         e.checkEvents(mario,platformsTop)
         e.checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls)
 
@@ -59,8 +56,6 @@ def App():
         
         #actual game objects, images, sprites, etc....................
         floorTiles.update()
-        brickTiles.update()
-        mysteryTiles.update()
         #-------------------------------------------------------------
 
         mario.update(viewport)

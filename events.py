@@ -49,7 +49,7 @@ def checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls):
     if mario.vel.y < 0:
         headCollision = pygame.sprite.spritecollide(mario,platformsBottom,False)
         if headCollision:
-            print('head collides')
+            print 'head collides'
             mario.vel.y = mario.vel.y * -1
             mario.pos.y = headCollision[0].rect.bottom + 36
 
@@ -60,7 +60,7 @@ def checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls):
     if mario.vel.x > 0:
         wallCollision = pygame.sprite.spritecollide(mario,leftWalls,False)
         if wallCollision:
-            print('left wall collision')
+            print 'left wall collision'
             mario.vel.x = 0
             mario.pos.x = wallCollision[0].rect.left - 12
     
@@ -70,7 +70,7 @@ def checkCollisions(mario,platformsTop,platformsBottom,leftWalls,rightWalls):
     if mario.vel.x < 0:
         wallCollision = pygame.sprite.spritecollide(mario,rightWalls,False)
         if wallCollision:
-            print('right wall collision')
+            print 'right wall collision'
             mario.vel.x = 0
             mario.pos.x = wallCollision[0].rect.right + 12
     

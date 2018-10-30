@@ -15,7 +15,7 @@ class Mario(Sprite):
         self.screenRect = self.screen.get_rect()
 
         #load image of mario
-        self.image = pygame.image.load('resources/smallMario.gif')
+        self.image = pygame.image.load('resources/small_mario_stand_right.gif')
         self.rect = self.image.get_rect()
 
         #viewport left boundary
@@ -65,7 +65,7 @@ class Mario(Sprite):
             self.pos.x -= abs(self.vel.x + 0.8)
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
-                if groups.rect.x == 0:
+                if groups.rect.x == 0:                    
                     groups.kill()
             
             self.viewLeft = 0
