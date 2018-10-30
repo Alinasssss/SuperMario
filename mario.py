@@ -15,7 +15,7 @@ class Mario(Sprite):
         self.screenRect = self.screen.get_rect()
 
         #load image of mario
-        self.image = pygame.image.load('resources/small_mario_stand_right.gif')
+        self.image = pygame.image.load('resources/Images/smallMarioStandRight.gif')
         self.rect = self.image.get_rect()
 
         #viewport left boundary
@@ -104,11 +104,13 @@ class Mario(Sprite):
             
         #make mario lose momentum if he is already in the air
         #and trying to move in the opposite direciton
+        '''
         if keys[pygame.K_LEFT] and self.airborne and self.vel.x > 0:
             self.acc.x = DECELLERATION_ON_AIR
 
         if keys[pygame.K_RIGHT] and self.airborne and self.vel.x < 0:
             self.acc.x = -DECELLERATION_ON_AIR
+        '''
             
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc

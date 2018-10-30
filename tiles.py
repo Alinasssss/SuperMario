@@ -12,11 +12,11 @@ class Tiles(Sprite):
         
         #create wall or floor tile depending on type input
         if type == 'platform':
-            self.image = pygame.image.load('resources/floor.gif')
+            self.image = pygame.image.load('resources/Images/floor.gif')
         if type == 'wall':
-            self.image = pygame.image.load('resources/wall.gif')
+            self.image = pygame.image.load('resources/Images/wall.gif')
         if type == 'floor':
-            self.image = pygame.image.load('resources/floorTile.gif')
+            self.image = pygame.image.load('resources/Images/floorTile.gif')
 
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
