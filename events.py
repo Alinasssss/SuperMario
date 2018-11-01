@@ -27,7 +27,18 @@ def check_key_down(event, mario, platforms_top):
 
 def check_key_up(event, mario):
     if event.key == pygame.K_d:
-        mario.jump_height_adjust()
+            mario.jump_height_adjust()
+    if event.key == pygame.K_RIGHT:
+        if mario.vel.x >= 0 and not mario.airborne:
+            print 'change mario to standing right'
+            mario.frames = 0
+            mario.image = pygame.image.load(mario.small_mario[0])
+
+    if (event.key == pygame.K_LEFT and mario.vel.y > 0 and not mario.airborne) or (mario.vel.y == 0):
+        if mario.vel.x <= 0 and not mario.airborne:
+            print 'change mario to standing left'
+            mario.frames = 0
+            mario.image = pygame.image.load(mario.small_mario[6])
 
 
 def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls):

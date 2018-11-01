@@ -6,6 +6,7 @@ LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+LIGHTBLUE = (70, 0, 255)
 
 # game settings
 WIDTH = 800 

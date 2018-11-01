@@ -3,8 +3,7 @@ from mario import Mario
 from pygame.sprite import Group
 from map import Map
 import events as e 
-from settings import BLACK, WIDTH, HEIGHT
-
+from settings import LIGHTBLUE, WIDTH, HEIGHT
 from entity_gamemaster import EntityGameMaster
 from mushroom import Mushroom
 from fireflower import Fireflower
@@ -25,13 +24,19 @@ def run_game():
     left_walls = Group()
     right_walls = Group()
     floor_tiles = Group()
+
+    
+    #actual game objects
+    floor_tiles = Group()
+    brick_tiles = Group()
+    mystery_tiles = Group()
     
     # create a viewport and pass all objects into it for
     # easier management
     viewport = Group()
 
     # create our map level and all objects within it
-    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles)
+    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles)
 
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)
@@ -39,6 +44,8 @@ def run_game():
     viewport.add(left_walls)
     viewport.add(right_walls)
     viewport.add(floor_tiles)
+    viewport.add(brick_tiles)
+    viewport.add(mystery_tiles)
 
     entity_gamemaster = EntityGameMaster()
     mushroom = Mushroom(screen, floor_tiles, left_walls, right_walls)
@@ -53,7 +60,7 @@ def run_game():
     mario = Mario(screen, entity_gamemaster)
         
     while True:
-        screen.fill(BLACK)
+        screen.fill(LIGHTBLUE)
 
         entity_gamemaster.update()
 
@@ -69,6 +76,8 @@ def run_game():
         
         # actual game objects, images, sprites, etc....................
         floor_tiles.update()
+        brick_tiles.update()
+        mystery_tiles.update()
         # -------------------------------------------------------------
 
         mario.update(viewport)

@@ -3,7 +3,7 @@ from tiles import Tiles
 
 
 class Map:
-    def __init__(self,screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles):
+    def __init__(self,screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles):
         file = open(file_map, 'r')
         lines = file.readlines()
 
@@ -38,8 +38,33 @@ class Map:
                 # continue adding if statement for objects you
                 # want to add in the map.txt file
 
-                if p == 'w':
-                    ''''''
+                if p == 'b':
+                    platform_top = Tiles(screen,x,y,'platform')
+                    platform_bottom = Tiles(screen,x,y+32,'platform')
+                    wall_left = Tiles(screen,x-17,y+28,'wall')
+                    wall_right = Tiles(screen,x+15,y+28,'wall')
+
+                    brick_tile = Tiles(screen,x,y+32,'brick')
+
+                    platforms_top.add(platform_top)
+                    platforms_bottom.add(platform_bottom)
+                    left_walls.add(wall_left)
+                    right_walls.add(wall_right)
+                    brick_tiles.add(brick_tile)
+
+                if p == 'm':
+                    platform_top = Tiles(screen,x,y,'platform')
+                    platform_bottom = Tiles(screen,x,y+32,'platform')
+                    wall_left = Tiles(screen,x-17,y+28,'wall')
+                    wall_right = Tiles(screen,x+15,y+28,'wall')
+
+                    mystery_tile = Tiles(screen,x,y+32,'mystery')
+
+                    platforms_top.add(platform_top)
+                    platforms_bottom.add(platform_bottom)
+                    left_walls.add(wall_left)
+                    right_walls.add(wall_right)
+                    mystery_tiles.add(mystery_tile)
 
                 if p == '\n':
                     y += 32
