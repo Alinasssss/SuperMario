@@ -1,21 +1,21 @@
 import pygame
-import sys
 from pygame.sprite import Sprite
 
-class Tiles(Sprite):
-    def __init__(self,screen,x,y,type):
-        super(Tiles,self).__init__()
 
-        #get the screen dims
+class Tiles(Sprite):
+    def __init__(self, screen, x, y, tile_type):
+        super(Tiles, self).__init__()
+
+        # get the screen dims
         self.screen = screen
         self.screenRect = self.screen.get_rect()
-        
-        #create wall or floor tile depending on type input
-        if type == 'platform':
+
+        # create wall or floor tile depending on type input
+        if tile_type == 'platform':
             self.image = pygame.image.load('resources/Images/floor.gif')
-        if type == 'wall':
+        if tile_type == 'wall':
             self.image = pygame.image.load('resources/Images/wall.gif')
-        if type == 'floor':
+        if tile_type == 'floor':
             self.image = pygame.image.load('resources/Images/floorTile.gif')
 
         self.rect = self.image.get_rect()
@@ -35,6 +35,4 @@ class Tiles(Sprite):
         self.blitme()
 
     def blitme(self):
-        self.screen.blit(self.image,self.rect) 
-
-        
+        self.screen.blit(self.image,self.rect)
