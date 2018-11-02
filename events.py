@@ -23,14 +23,19 @@ def check_key_down(event, mario, platforms_top,screen,fireballs):
         if mario.onFloor:
             mario.crouching = True
     
-    if s.FIREBALLS == 0 or s.FIREBALLS == 1:
-        s.FIREBALLS += 1
     if event.key == pygame.K_f:
-        if s.FIREBALLS > 0:
-            fireball = Fireball(screen,mario)
-            fireballs.add(fireball)
-            s.FIREBALLS -= 1
-        print s.FIREBALLS
+        if mario.status == 'fire':
+            if len(fireballs) <2:
+                if mario.direction == "right":
+                    mario.change_image(14)
+                    fireball = Fireball(screen,mario)
+                elif mario.direction == 'left':
+                    mario.change_image(15)
+                    fireball = Fireball(screen,mario)
+                
+                fireballs.add(fireball)
+                    
+        
     if event.key == pygame.K_q:
         sys.exit()
 
@@ -59,7 +64,7 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
             mario.vel.y = 0
             mario.pos.y = feet_collisions[0].rect.top+1
             mario.airborne = False
-
+            
     # mario collides with his head
     if mario.vel.y < 0:
         head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False,pygame.sprite.collide_mask)

@@ -73,6 +73,10 @@ class Mario(Sprite):
         self.fire_mario.append('resources/Images/fireMarioSquadRight.gif')
         self.fire_mario.append('resources/Images/fireMarioSquadLeft.gif')
 
+        self.fire_mario.append('resources/Images/fireMarioShootRight.gif')
+        self.fire_mario.append('resources/Images/fireMarioShootLeft.gif')
+        
+
 
 
         # load image of mario
@@ -104,6 +108,10 @@ class Mario(Sprite):
             
             # play jump sound effect
             pygame.mixer.Channel(1).play(pygame.mixer.Sound('resources/sounds/jump.wav'))
+            if self.direction == 'right':
+                self.change_image(5)
+            elif self.direction == 'left':
+                    self.change_image(10)
 
     def jump_height_adjust(self):
         # adjust the jump height to how long the jump key is pressed
@@ -301,11 +309,15 @@ class Mario(Sprite):
             if self.vel.x > 0 and not self.airborne:
                 self.change_image(4)
             
-        if not self.airborne and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_s]:
+        if not self.airborne and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
             self.frames = 0
             if self.vel.x > 0:
                 self.change_image(0)
             elif self.vel.x < 0:
+                self.change_image(6)
+            if self.direction == 'right':
+                self.change_image(0)
+            elif self.direction == 'left':
                 self.change_image(6)
 
         

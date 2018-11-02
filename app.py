@@ -86,7 +86,7 @@ def run_game():
         brick_tiles.update()
         mystery_tiles.update()
         pole.update()
-        fireballs.update(platforms_top)
+        fireballs.update(platforms_top,left_walls,right_walls)
         # -------------------------------------------------------------
 
         mario.update(viewport)

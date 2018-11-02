@@ -18,10 +18,15 @@ class Fireball(Sprite):
 
         self.shots = 2
         
-        self.fire_animation.append('resources/Images/fireball1.gif')
-        self.fire_animation.append('resources/Images/fireball2.gif')
-        self.fire_animation.append('resources/Images/fireball3.gif')
-        self.fire_animation.append('resources/Images/fireball4.gif')
+        self.fire_animation.append('resources/Images/fireball_right1.gif')
+        self.fire_animation.append('resources/Images/fireball_right2.gif')
+        self.fire_animation.append('resources/Images/fireball_right3.gif')
+        self.fire_animation.append('resources/Images/fireball_right4.gif')
+        self.fire_animation.append('resources/Images/fireball_left1.gif')
+        self.fire_animation.append('resources/Images/fireball_left2.gif')
+        self.fire_animation.append('resources/Images/fireball_left3.gif')
+        self.fire_animation.append('resources/Images/fireball_left4.gif')
+
         
         # load image of mario
         self.image = pygame.image.load(self.fire_animation[0]).convert_alpha()
@@ -44,7 +49,7 @@ class Fireball(Sprite):
             self.direction = 'left'
 
         
-    def update(self,platforms_top):
+    def update(self,platforms_top,left_walls,right_walls):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         if self.direction == 'right':
             self.acc = vector(0,GRAVITY)
@@ -55,11 +60,39 @@ class Fireball(Sprite):
             self.acc.x -= 0.01
             self.vel.x = -1
         
+        self.frames += 1
+
+        if self.frames == 20:
+            self.change_image(0)
+        elif self.frames == 40:
+            self.change_image(1)
+        elif self.frames == 60:
+            self.change_image(2)
+        elif self.frames == 80:
+            self.change_image(3)
+        elif self.frames == 100:
+            self.frames = 0
+
+        if self.pos.y > self.screen_rect.height or self.pos.x > self.screen_rect.width:
+            self.kill()
+        
+
         #check ground collisions for fireballs
-        fireball_collision = pygame.sprite.spritecollide(self,platforms_top,False,pygame.sprite.collide_mask)
-        if fireball_collision:
+        floor_collision = pygame.sprite.spritecollide(self,platforms_top,False,pygame.sprite.collide_mask)
+        if floor_collision:
             self.vel.y = -1
         
+        left_wall_collision = pygame.sprite.spritecollide(self,left_walls,False,pygame.sprite.collide_mask)
+        if left_wall_collision:
+            self.kill()
+
+
+        right_wall_collision = pygame.sprite.spritecollide(self,left_walls,False,pygame.sprite.collide_mask)
+        if right_wall_collision:
+            self.kill()
+        
+        
+
         # friction only applies in the x direction
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
@@ -70,13 +103,22 @@ class Fireball(Sprite):
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
 
-        if self.pos.y > self.screen_rect.height or self.pos.x > self.screen_rect.width:
-            self.kill()
         
     
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
         pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
+
+
+    def change_image(self,index):
+        if self.direction == 'right':
+            self.image = pygame.image.load(self.fire_animation[index]).convert_alpha()
+        elif self.direction == 'left':
+            self.image = pygame.image.load(self.fire_animation[index+4]).convert_alpha()
+        
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+    
     
     
