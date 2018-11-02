@@ -30,22 +30,15 @@ def run_game():
     floor_tiles = Group()
     brick_tiles = Group()
     mystery_tiles = Group()
+    pole = Group()
+    fireballs = Group()
     
     # create a viewport and pass all objects into it for
     # easier management
     viewport = Group()
 
     # create our map level and all objects within it
-    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles)
-
-    # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
-    viewport.add(platforms_top)
-    viewport.add(platforms_bottom)
-    viewport.add(left_walls)
-    viewport.add(right_walls)
-    viewport.add(floor_tiles)
-    viewport.add(brick_tiles)
-    viewport.add(mystery_tiles)
+    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles,pole)
 
     entity_gamemaster = EntityGameMaster()
     mushroom = Mushroom(screen, floor_tiles, left_walls, right_walls)
@@ -57,6 +50,20 @@ def run_game():
     entity_gamemaster.one_up_mushrooms.add(one_up_mushroom)
     entity_gamemaster.starmen.add(starman)
 
+    # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
+    viewport.add(platforms_top)
+    viewport.add(platforms_bottom)
+    viewport.add(left_walls)
+    viewport.add(right_walls)
+    viewport.add(floor_tiles)
+    viewport.add(brick_tiles)
+    viewport.add(mystery_tiles)
+    viewport.add(pole)
+    viewport.add(entity_gamemaster.fireflowers)
+    viewport.add(entity_gamemaster.mushrooms)
+    viewport.add(entity_gamemaster.one_up_mushrooms)
+    viewport.add(entity_gamemaster.starmen)
+
     mario = Mario(screen, entity_gamemaster)
         
     while True:
@@ -64,8 +71,8 @@ def run_game():
 
         entity_gamemaster.update()
 
-        e.check_events(mario, platforms_top)
-        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls)
+        e.check_events(mario, platforms_top,screen,fireballs)
+        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls,fireballs)
 
         # each collision part is independently handled------------------
         platforms_top.update()
@@ -78,6 +85,8 @@ def run_game():
         floor_tiles.update()
         brick_tiles.update()
         mystery_tiles.update()
+        pole.update()
+        fireballs.update(platforms_top)
         # -------------------------------------------------------------
 
         mario.update(viewport)

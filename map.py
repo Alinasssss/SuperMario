@@ -3,7 +3,7 @@ from tiles import Tiles
 
 
 class Map:
-    def __init__(self,screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles):
+    def __init__(self,screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles,pole):
         file = open(file_map, 'r')
         lines = file.readlines()
 
@@ -21,9 +21,9 @@ class Map:
                     # 4 sided rectangle with independent collidable parts - - - - -
                     # this will serve as a mask for every game object that needs to be collidable
                     platform_top = Tiles(screen, x, y, 'platform')
-                    platform_bottom = Tiles(screen, x, y+32, 'platform')
+                    platform_bottom = Tiles(screen, x, y+34, 'platform')
                     wall_left = Tiles(screen, x-17, y+28, 'wall')
-                    wall_right = Tiles(screen, x+15, y+28, 'wall')
+                    wall_right = Tiles(screen, x+18, y+28, 'wall')
                     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
                     # game object representation of floor tile
@@ -39,10 +39,10 @@ class Map:
                 # want to add in the map.txt file
 
                 if p == 'b':
-                    platform_top = Tiles(screen,x,y,'platform')
-                    platform_bottom = Tiles(screen,x,y+32,'platform')
+                    platform_top = Tiles(screen,x,y+4,'platform')
+                    platform_bottom = Tiles(screen,x,y+34,'platform')
                     wall_left = Tiles(screen,x-17,y+28,'wall')
-                    wall_right = Tiles(screen,x+15,y+28,'wall')
+                    wall_right = Tiles(screen,x+18,y+28,'wall')
 
                     brick_tile = Tiles(screen,x,y+32,'brick')
 
@@ -53,10 +53,10 @@ class Map:
                     brick_tiles.add(brick_tile)
 
                 if p == 'm':
-                    platform_top = Tiles(screen,x,y,'platform')
-                    platform_bottom = Tiles(screen,x,y+32,'platform')
+                    platform_top = Tiles(screen,x,y+4,'platform')
+                    platform_bottom = Tiles(screen,x,y+34,'platform')
                     wall_left = Tiles(screen,x-17,y+28,'wall')
-                    wall_right = Tiles(screen,x+15,y+28,'wall')
+                    wall_right = Tiles(screen,x+18,y+28,'wall')
 
                     mystery_tile = Tiles(screen,x,y+32,'mystery')
 
@@ -65,6 +65,13 @@ class Map:
                     left_walls.add(wall_left)
                     right_walls.add(wall_right)
                     mystery_tiles.add(mystery_tile)
+                
+                if p == 'p':
+                    flag_pole = Tiles(screen,x,y+32,'pole')
+
+                    pole.add(flag_pole)
+
+
 
                 if p == '\n':
                     y += 32

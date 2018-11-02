@@ -15,8 +15,10 @@ class Mushroom(Sprite):
 
         self.image = pygame.image.load('resources/Images/growMushroom.gif')
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.rect.center = (400, 400)
+        self.mask = pygame.mask.from_surface(self.image)
         self.centerx = self.rect.centerx
         self.centery = self.rect.centery
         self.previous_centery = self.centery
@@ -45,8 +47,18 @@ class Mushroom(Sprite):
         if colliding_with_right_wall or colliding_with_left_wall:
             self.horizontal_speed *= -1
 
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (self.centerx, self.centery)
+        
+        self.mask = pygame.mask.from_surface(self.image)
+        
         self.blitme()
-
+        self.mask = pygame.mask.from_surface(self.image)
+    
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+        pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
+
+
+    def get_mask(self):
+        return self.mask

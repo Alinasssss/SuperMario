@@ -1,18 +1,20 @@
 import pygame
 import sys
+import settings as s
+from fireball import Fireball
 
 
-def check_events(mario, platforms_top):
+def check_events(mario, platforms_top,screen,fireballs):
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_key_down(event, mario, platforms_top)
+            check_key_down(event, mario, platforms_top,screen,fireballs)
         elif event.type == pygame.KEYUP:
             check_key_up(event, mario)
 
 
-def check_key_down(event, mario, platforms_top):
+def check_key_down(event, mario, platforms_top,screen,fireballs):
     # character jumps only when he is on the floor. this prevents him from doing multiple jumps while in the air
     if event.key == pygame.K_d:
         mario.jump(platforms_top)
@@ -20,7 +22,15 @@ def check_key_down(event, mario, platforms_top):
     if event.key == pygame.K_DOWN:
         if mario.onFloor:
             mario.crouching = True
-        
+    
+    if s.FIREBALLS == 0 or s.FIREBALLS == 1:
+        s.FIREBALLS += 1
+    if event.key == pygame.K_f:
+        if s.FIREBALLS > 0:
+            fireball = Fireball(screen,mario)
+            fireballs.add(fireball)
+            s.FIREBALLS -= 1
+        print s.FIREBALLS
     if event.key == pygame.K_q:
         sys.exit()
 
@@ -30,18 +40,17 @@ def check_key_up(event, mario):
             mario.jump_height_adjust()
     if event.key == pygame.K_RIGHT:
         if mario.vel.x >= 0 and not mario.airborne:
-            print 'change mario to standing right'
             mario.frames = 0
-            mario.image = pygame.image.load(mario.small_mario[0])
-
+            mario.change_image(0)
+            
     if (event.key == pygame.K_LEFT and mario.vel.y > 0 and not mario.airborne) or (mario.vel.y == 0):
         if mario.vel.x <= 0 and not mario.airborne:
             print 'change mario to standing left'
             mario.frames = 0
-            mario.image = pygame.image.load(mario.small_mario[6])
+            mario.change_image(6)
+            
 
-
-def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls):
+def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls,fireballs):
     # mario is coming down after having jumped, collide with top platform
     if mario.vel.y > 0:
         feet_collisions = pygame.sprite.spritecollide(mario, platforms_top, False)
@@ -51,12 +60,13 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
             mario.pos.y = feet_collisions[0].rect.top+1
             mario.airborne = False
 
+    # mario collides with his head
     if mario.vel.y < 0:
-        head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False)
+        head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False,pygame.sprite.collide_mask)
         if head_collision:
             print('head collides')
-            mario.vel.y = mario.vel.y * -1
-            mario.pos.y = head_collision[0].rect.bottom + 36
+            mario.vel.y = 0
+            
 
     # when mario is moving in the right direction, his velocity is greater than 0,
     # check for collisions with wall

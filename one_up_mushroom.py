@@ -13,8 +13,9 @@ class OneUpMushroom(Sprite):
         self.left_walls = left_walls
         self.right_walls = right_walls
 
-        self.image = pygame.image.load('resources/Images/growMushroom.gif')
+        self.image = pygame.image.load('resources/Images/1UpMushroom.gif')
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.rect.center = (400, 0)
         self.centerx = self.rect.centerx
@@ -47,6 +48,9 @@ class OneUpMushroom(Sprite):
 
         self.rect.center = (self.centerx, self.centery)
         self.blitme()
+        self.mask = pygame.mask.from_surface(self.image)
+
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+        pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
