@@ -11,9 +11,6 @@ class Mario(Sprite):
 
         self.entity_gamemaster = entity_gamemaster
 
-        # helper info for which side a collision has occured
-        self.collision_side = 'top'
-        
         # get the screen dims
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
@@ -25,6 +22,7 @@ class Mario(Sprite):
         self.fire_mario = []
 
         self.status = 'small'
+        self.direction = 'right'
 
 
         #load all small mario sprites
@@ -70,18 +68,21 @@ class Mario(Sprite):
         self.fire_mario.append('resources/Images/fireMarioWalkLeft1.gif')
         self.fire_mario.append('resources/Images/fireMarioWalkLeft2.gif')
         self.fire_mario.append('resources/Images/fireMarioWalkLeft3.gif')
-        self.fire_mario.append('resources/Images/fireMarioLeftReverse.gif')
         self.fire_mario.append('resources/Images/fireMarioJumpLeft.gif')
+        self.fire_mario.append('resources/Images/fireMarioLeftReverse.gif')
         self.fire_mario.append('resources/Images/fireMarioSquadRight.gif')
         self.fire_mario.append('resources/Images/fireMarioSquadLeft.gif')
 
 
 
         # load image of mario
-        self.image = pygame.image.load(self.small_mario[0])
+        self.image = pygame.image.load(self.small_mario[0]).convert_alpha()
         self.change_image(0)
-        #self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect()
 
+        #collision mask
+        self.mask = pygame.mask.from_surface(self.image)
+        
         # viewport left and right boundaries
         self.view_left = 0
 
@@ -98,7 +99,7 @@ class Mario(Sprite):
         hits = pygame.sprite.spritecollide(self, platforms_top, False)
         self.rect.y -= 1.1
         if hits:
-            self.vel.y = -1.7
+            self.vel.y = -1.98
             self.airborne = True
             
             # play jump sound effect
@@ -122,6 +123,7 @@ class Mario(Sprite):
         if changed:
             self.pos.x -= abs(self.vel.x + 0.8)
             for groups in viewport:
+                #print groups
                 groups.rect.x -= abs(self.vel.x)
                 if groups.rect.x == 0:                    
                     groups.kill()
@@ -134,15 +136,32 @@ class Mario(Sprite):
             self.pos.x += 1.2
 
     def check_mushroom_collisions(self):
-        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True)
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True,pygame.sprite.collide_mask)
         if collisions:
             print("I-ya got eet-uh")
+            if self.status == 'small':
+                self.status = 'big'
+                if self.vel > 0:
+                    self.change_image(0)
+                elif self.vel < 0:
+                    self.change_image(6)
 
     def check_fireflower_collisions(self):
-        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True)
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True,pygame.sprite.collide_mask)
         if collisions:
-            print("Atsa spicy")
-
+            if self.status == 'small':
+                self.status = 'big'
+                if self.vel > 0:
+                    self.change_image(0)
+                elif self.vel < 0:
+                    self.change_image(6)
+            elif self.status == 'big':
+                self.status = 'fire'
+                if self.vel > 0:
+                    self.change_image(0)
+                elif self.vel < 0:
+                    self.change_image(6)
+            
     def check_one_up_mushroom_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.one_up_mushrooms, True)
         if collisions:
@@ -163,16 +182,28 @@ class Mario(Sprite):
         if keys[pygame.K_RIGHT] and keys[pygame.K_s]:
             # running right
             self.acc.x = PLAYER_RUN_ACCELERATION
+            self.direction = 'right'
             if not self.airborne:
                 self.frames += 1
-                if self.frames == 20:
-                    self.change_image(1)
-                elif self.frames == 40:
-                    self.change_image(2)
-                elif self.frames == 60:
-                    self.change_image(3)
-                elif self.frames >= 80:
-                    self.frames = 0
+                if self.status == 'small':
+                    if self.frames == 9:
+                        self.change_image(1)
+                    elif self.frames == 18:
+                        self.change_image(2)
+                    elif self.frames == 27:
+                        self.change_image(3)
+                    elif self.frames >= 34:
+                        self.frames = 0
+                elif not self.status == 'small':
+                    if self.frames == 12:
+                        self.change_image(1)
+                    elif self.frames == 24:
+                        self.change_image(2)
+                    elif self.frames == 36:
+                        self.change_image(3)
+                    elif self.frames >= 48:
+                        self.frames = 0
+
             elif self.airborne:
                 self.change_image(5)
             if self.vel.x < 0 and not self.airborne:
@@ -182,20 +213,30 @@ class Mario(Sprite):
         elif keys[pygame.K_RIGHT]:
             # walking right
             self.acc.x = PLAYER_WALK_ACCELERATION
+            self.direction = 'right'
             if not self.airborne:
                 self.frames += 1
-                if self.frames == 30:
-                    self.change_image(1)
-                    
-                elif self.frames == 60:
-                    self.change_image(2)
-                elif self.frames == 90:
-                    self.change_image(3)
-                elif self.frames == 120:
-                    self.frames = 0
+                if self.status == 'small':
+                    if self.frames == 13:
+                        self.change_image(1)
+                    elif self.frames == 26:
+                        self.change_image(2)
+                    elif self.frames == 39:
+                        self.change_image(3)
+                    elif self.frames >= 51:
+                        self.frames = 0
+                elif not self.status == 'small':
+                    if self.frames == 17:
+                        self.change_image(1)
+                    elif self.frames == 34:
+                        self.change_image(2)
+                    elif self.frames == 61:
+                        self.change_image(3)
+                    elif self.frames >= 78:
+                        self.frames = 0
+
             elif self.airborne:
                 self.change_image(5)
-            
             if self.vel.x < 0 and not self.airborne:
                 self.change_image(11)
 
@@ -203,17 +244,27 @@ class Mario(Sprite):
             # running left
             #running left
             self.acc.x = -PLAYER_RUN_ACCELERATION
+            self.direction = 'left'
             if not self.airborne:
                 self.frames += 1
-                if self.frames == 20:
-                    self.change_image(6)
-                    
-                elif self.frames == 40:
-                    self.change_image(7)
-                elif self.frames == 60:
-                    self.change_image(8)
-                elif self.frames >= 80:
-                    self.frames = 0
+                if self.status == 'small':
+                    if self.frames == 9:
+                        self.change_image(7)
+                    elif self.frames == 18:
+                        self.change_image(8)
+                    elif self.frames == 27:
+                        self.change_image(9)
+                    elif self.frames >= 34:
+                        self.frames = 0
+                elif not self.status == 'small':
+                    if self.frames == 12:
+                        self.change_image(7)
+                    elif self.frames == 24:
+                        self.change_image(8)
+                    elif self.frames == 36:
+                        self.change_image(9)
+                    elif self.frames >= 48:
+                        self.frames = 0
             elif self.airborne:
                 self.change_image(10)
             if self.vel.x > 0 and not self.airborne:
@@ -222,16 +273,29 @@ class Mario(Sprite):
         elif keys[pygame.K_LEFT]:
             # walking left
             self.acc.x = -PLAYER_WALK_ACCELERATION
+            self.direction = 'left'
             if not self.airborne:
                 self.frames += 1
-                if self.frames == 30:
-                    self.change_image(6)
-                elif self.frames == 60:
-                    self.change_image(7)
-                elif self.frames == 90:
-                    self.change_image(8)
-                elif self.frames == 120:
-                    self.frames = 0
+                if self.status == 'small':
+                    if self.frames == 13:
+                        self.change_image(7)
+                    elif self.frames == 26:
+                        self.change_image(8)
+                    elif self.frames == 39:
+                        self.change_image(9)
+                    elif self.frames >= 51:
+                        self.frames = 0
+                    elif self.airborne:
+                        self.change_image(10)
+                elif not self.status == 'small':
+                    if self.frames == 17:
+                        self.change_image(7)
+                    elif self.frames == 34:
+                        self.change_image(8)
+                    elif self.frames == 61:
+                        self.change_image(9)
+                    elif self.frames >= 78:
+                        self.frames = 0
             elif self.airborne:
                 self.change_image(10)
             if self.vel.x > 0 and not self.airborne:
@@ -262,7 +326,7 @@ class Mario(Sprite):
             self.vel.x = 0
             self.vel.y = -2
             self.pos.y = self.screen_rect.height - 100
-            self.change_image(12)
+            #self.change_image(12)
             
         # friction only applies in the x direction
         self.acc.x += self.vel.x * FRICTION
@@ -271,32 +335,32 @@ class Mario(Sprite):
 
         self.rect.midbottom = self.pos
 
-        self.viewport(viewport)
-
-        self.blitme()
-
         self.check_mushroom_collisions()
         self.check_fireflower_collisions()
         self.check_one_up_mushroom_collisions()
         self.check_starman_collisions()
 
+        self.viewport(viewport)
+        self.blitme()
+        self.mask = pygame.mask.from_surface(self.image)
+        
+
     def change_image(self,index):
         if self.status == 'small':
-            self.image = pygame.image.load(self.small_mario[index])
-            if index == 0:
-                self.rect = self.image.get_rect()
+            self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
         elif self.status == 'big':
-            self.image = pygame.image.load(self.big_mario[index])
-            if index == 0:
-                self.rect = self.image.get_rect()
+            self.image = pygame.image.load(self.big_mario[index]).convert_alpha()
         elif self.status == 'fire':
-            self.image = pygame.image.load(self.fire_mario[index])
-            if index == 0:
-                self.rect = self.image.get_rect()
+            self.image = pygame.image.load(self.fire_mario[index]).convert_alpha()
         elif self.status == 'dead':
             print self.status
-            self.image = pygame.image.load(self.small_mario[index])
-
+            self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        
+        
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
+        pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
+        
