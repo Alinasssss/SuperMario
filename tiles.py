@@ -23,8 +23,12 @@ class Tiles(Sprite):
             self.image = pygame.image.load('resources/Images/mysteryBox1.gif')
         if tile_type == 'metal':
             self.image = pygame.image.load('resources/Images/metalTile.gif')
+        if tile_type == 'pole':
+            self.image = pygame.image.load('resources/Images/pole.gif')
+
 
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
         self.x = float(self.rect.x)
@@ -37,7 +41,8 @@ class Tiles(Sprite):
 
         self.blitme()
             
-    def update(self):            
+    def update(self):
+        self.mask = pygame.mask.from_surface(self.image)            
         self.blitme()
 
     def blitme(self):
