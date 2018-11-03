@@ -17,23 +17,24 @@ def check_events(mario, platforms_top,screen,fireballs):
 def check_key_down(event, mario, platforms_top,screen,fireballs):
     # character jumps only when he is on the floor. this prevents him from doing multiple jumps while in the air
     if event.key == pygame.K_d:
-        mario.jump(platforms_top)
+        if not mario.finish:
+            mario.jump(platforms_top)
 
-    if event.key == pygame.K_DOWN:
-        if mario.onFloor:
-            mario.crouching = True
-    
     if event.key == pygame.K_f:
-        if mario.status == 'fire':
-            if len(fireballs) <2:
-                if mario.direction == "right":
-                    mario.change_image(14)
-                    fireball = Fireball(screen,mario)
-                elif mario.direction == 'left':
-                    mario.change_image(15)
-                    fireball = Fireball(screen,mario)
+        if not mario.finish:
+            if mario.status == 'fire':
+                if len(fireballs) <2:
                 
-                fireballs.add(fireball)
+                    pygame.mixer.Channel(3).play(pygame.mixer.Sound('resources/sounds/fireball.wav'))
+            
+                    if mario.direction == "right":
+                        mario.change_image(15)
+                        fireball = Fireball(screen,mario)
+                    elif mario.direction == 'left':
+                        mario.change_image(16)
+                        fireball = Fireball(screen,mario)
+                
+                    fireballs.add(fireball)
                     
         
     if event.key == pygame.K_q:
@@ -41,17 +42,19 @@ def check_key_down(event, mario, platforms_top,screen,fireballs):
 
 
 def check_key_up(event, mario):
-    if event.key == pygame.K_d:
-            mario.jump_height_adjust()
-    if event.key == pygame.K_RIGHT:
-        if mario.vel.x >= 0 and not mario.airborne:
-            mario.frames = 0
-            mario.change_image(0)
+    if not mario.finish:
+        
+        if event.key == pygame.K_d:
+                mario.jump_height_adjust()
+        if event.key == pygame.K_RIGHT:
+            if mario.vel.x >= 0 and not mario.airborne:
+                mario.frames = 0
+                mario.change_image(0)
             
-    if (event.key == pygame.K_LEFT and mario.vel.y > 0 and not mario.airborne) or (mario.vel.y == 0):
-        if mario.vel.x <= 0 and not mario.airborne:
-            mario.frames = 0
-            mario.change_image(6)
+        if (event.key == pygame.K_LEFT and mario.vel.y > 0 and not mario.airborne) or (mario.vel.y == 0):
+            if mario.vel.x <= 0 and not mario.airborne:
+                mario.frames = 0
+                mario.change_image(6)
             
 
 def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls,fireballs):

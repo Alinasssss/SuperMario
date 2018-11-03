@@ -87,9 +87,9 @@ def run_game():
         mystery_tiles.update()
         pole.update()
         fireballs.update(platforms_top,left_walls,right_walls)
-        # -------------------------------------------------------------
+        # -------------------------------dddd------------------------------
 
-        mario.update(viewport)
+        mario.update(viewport,pole)
         pygame.display.flip()
 
 

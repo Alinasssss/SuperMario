@@ -3,6 +3,7 @@ from pygame.sprite import Sprite
 import pygame.font
 from physics import *
 vector = pygame.math.Vector2
+from PIL import Image
 
 
 class Mario(Sprite):
@@ -24,6 +25,7 @@ class Mario(Sprite):
         self.status = 'small'
         self.direction = 'right'
         self.speed = 'walking'
+        self.finish = False
         
 
         #load all small mario sprites
@@ -40,6 +42,9 @@ class Mario(Sprite):
         self.small_mario.append('resources/Images/smallMarioJumpLeft.gif')
         self.small_mario.append('resources/Images/smallMarioLeftReverse.gif')
         self.small_mario.append('resources/Images/deadMario.gif')
+        self.small_mario.append('resources/Images/marioPole.gif')
+        self.small_mario.append('resources/Images/marioPole.gif')
+
 
         #load all big mario sprites
         self.big_mario.append('resources/Images/bigMarioStandRight.gif')
@@ -56,6 +61,8 @@ class Mario(Sprite):
         self.big_mario.append('resources/Images/bigMarioLeftReverse.gif')
         self.big_mario.append('resources/Images/bigMarioSquadRight.gif')
         self.big_mario.append('resources/Images/bigMarioSquadLeft.gif')
+        self.big_mario.append('resources/Images/bigMarioPole.gif')
+
         
         
         #load all fire mario sprites
@@ -73,16 +80,18 @@ class Mario(Sprite):
         self.fire_mario.append('resources/Images/fireMarioLeftReverse.gif')
         self.fire_mario.append('resources/Images/fireMarioSquadRight.gif')
         self.fire_mario.append('resources/Images/fireMarioSquadLeft.gif')
+        self.fire_mario.append('resources/Images/fireMarioPole.gif')
 
         self.fire_mario.append('resources/Images/fireMarioShootRight.gif')
         self.fire_mario.append('resources/Images/fireMarioShootLeft.gif')
+
         
-
-
+        
 
         # load image of mario
         self.image = pygame.image.load(self.small_mario[0]).convert_alpha()
-        self.change_image(0)
+
+        #self.change_image(0)
         self.rect = self.image.get_rect()
 
         #collision mask
@@ -149,6 +158,10 @@ class Mario(Sprite):
     def check_mushroom_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True,pygame.sprite.collide_mask)
         if collisions:
+            
+            pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            
+
             print("I-ya got eet-uh")
             if self.status == 'small':
                 self.status = 'big'
@@ -160,6 +173,10 @@ class Mario(Sprite):
     def check_fireflower_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True,pygame.sprite.collide_mask)
         if collisions:
+
+            pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            
+
             if self.status == 'small':
                 self.status = 'big'
                 if self.vel > 0:
@@ -176,179 +193,214 @@ class Mario(Sprite):
     def check_one_up_mushroom_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.one_up_mushrooms, True)
         if collisions:
+            pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            
             print("One man")
 
     def check_starman_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.starmen, True)
         if collisions:
+            pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/starman.wav'))
+            
+            
             print("Du du du dudu du dudududu")
 
-    def update(self, viewport):
+    def check_pole_collisions(self,pole):
+
+        if self.finish == False:
+            collision = pygame.sprite.spritecollide(self,pole,False,pygame.sprite.collide_mask)
+            if collision:
+                self.finish = True
+                if self.status == 'small':
+                    self.change_image(13)
+                elif not self.status == 'small':
+                    self.change_image(14)
+
+                self.vel.x = 0
+                self.vel.y = 0
+                
+    def update(self, viewport,pole):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         self.acc = vector(0, GRAVITY)
     
         keys = pygame.key.get_pressed()
 
-        # update acceleration depending on when mario is running on walking
-        if keys[pygame.K_RIGHT] and keys[pygame.K_s]:
-            # running right
-            self.speed = 'running'
-            self.acc.x = PLAYER_RUN_ACCELERATION
-            self.direction = 'right'
-            if not self.airborne:
-                self.frames += 1
-                if self.status == 'small':
-                    if self.frames == 9:
-                        self.change_image(1)
-                    elif self.frames == 18:
-                        self.change_image(2)
-                    elif self.frames == 27:
-                        self.change_image(3)
-                    elif self.frames >= 34:
-                        self.frames = 0
-                elif not self.status == 'small':
-                    if self.frames == 12:
-                        self.change_image(1)
-                    elif self.frames == 24:
-                        self.change_image(2)
-                    elif self.frames == 36:
-                        self.change_image(3)
-                    elif self.frames >= 48:
-                        self.frames = 0
+        if not self.finish:
+            # update acceleration depending on when mario is running on walking
+            if keys[pygame.K_RIGHT] and keys[pygame.K_s] and not keys[pygame.K_DOWN]:
+                # running right
+                self.speed = 'running'
+                self.acc.x = PLAYER_RUN_ACCELERATION
+                self.direction = 'right'
+                if not self.airborne:
+                    self.frames += 1
+                    if self.status == 'small':
+                        if self.frames == 9:
+                            self.change_image(1)
+                        elif self.frames == 18:
+                            self.change_image(2)
+                        elif self.frames == 27:
+                            self.change_image(3)
+                        elif self.frames >= 34:
+                            self.frames = 0
+                    elif not self.status == 'small':
+                        if self.frames == 12:
+                            self.change_image(1)
+                        elif self.frames == 24:
+                            self.change_image(2)
+                        elif self.frames == 36:
+                            self.change_image(3)
+                        elif self.frames >= 48:
+                            self.frames = 0
 
-            elif self.airborne:
-                self.change_image(5)
-            if self.vel.x < 0 and not self.airborne:
-                self.change_image(11)
+                elif self.airborne:
+                    self.change_image(5)
+                if self.vel.x < 0 and not self.airborne:
+                    self.change_image(11)
 
 
-        elif keys[pygame.K_RIGHT]:
-            # walking right
-            self.speed = 'walking'
+            elif keys[pygame.K_RIGHT] and not keys[pygame.K_DOWN]:
+                # walking right
+                self.speed = 'walking'
             
-            self.acc.x = PLAYER_WALK_ACCELERATION
-            self.direction = 'right'
-            if not self.airborne:
-                self.frames += 1
-                if self.status == 'small':
-                    if self.frames == 13:
-                        self.change_image(1)
-                    elif self.frames == 26:
-                        self.change_image(2)
-                    elif self.frames == 39:
-                        self.change_image(3)
-                    elif self.frames >= 51:
-                        self.frames = 0
-                elif not self.status == 'small':
-                    if self.frames == 17:
-                        self.change_image(1)
-                    elif self.frames == 34:
-                        self.change_image(2)
-                    elif self.frames == 61:
-                        self.change_image(3)
-                    elif self.frames >= 78:
-                        self.frames = 0
+                self.acc.x = PLAYER_WALK_ACCELERATION
+                self.direction = 'right'
+                if not self.airborne:
+                    self.frames += 1
+                    if self.status == 'small':
+                        if self.frames == 13:
+                            self.change_image(1)
+                        elif self.frames == 26:
+                            self.change_image(2)
+                        elif self.frames == 39:
+                            self.change_image(3)
+                        elif self.frames >= 51:
+                            self.frames = 0
+                    elif not self.status == 'small':
+                        if self.frames == 17:
+                            self.change_image(1)
+                        elif self.frames == 34:
+                            self.change_image(2)
+                        elif self.frames == 61:
+                            self.change_image(3)
+                        elif self.frames >= 78:
+                            self.frames = 0
 
-            elif self.airborne:
-                self.change_image(5)
-            if self.vel.x < 0 and not self.airborne:
-                self.change_image(11)
+                elif self.airborne:
+                    self.change_image(5)
+                if self.vel.x < 0 and not self.airborne:
+                    self.change_image(11)
 
-        if keys[pygame.K_LEFT] and keys[pygame.K_s]:
-            # running left
-            #running left
-            self.speed = 'running'
+            if keys[pygame.K_LEFT] and keys[pygame.K_s] and not keys[pygame.K_DOWN]:
+                # running left
+                #running left
+                self.speed = 'running'
             
-            self.acc.x = -PLAYER_RUN_ACCELERATION
-            self.direction = 'left'
-            if not self.airborne:
-                self.frames += 1
-                if self.status == 'small':
-                    if self.frames == 9:
-                        self.change_image(7)
-                    elif self.frames == 18:
-                        self.change_image(8)
-                    elif self.frames == 27:
-                        self.change_image(9)
-                    elif self.frames >= 34:
-                        self.frames = 0
-                elif not self.status == 'small':
-                    if self.frames == 12:
-                        self.change_image(7)
-                    elif self.frames == 24:
-                        self.change_image(8)
-                    elif self.frames == 36:
-                        self.change_image(9)
-                    elif self.frames >= 48:
-                        self.frames = 0
-            elif self.airborne:
-                self.change_image(10)
-            if self.vel.x > 0 and not self.airborne:
-                self.change_image(4)
+                self.acc.x = -PLAYER_RUN_ACCELERATION
+                self.direction = 'left'
+                if not self.airborne:
+                    self.frames += 1
+                    if self.status == 'small':
+                        if self.frames == 9:
+                            self.change_image(7)
+                        elif self.frames == 18:
+                            self.change_image(8)
+                        elif self.frames == 27:
+                            self.change_image(9)
+                        elif self.frames >= 34:
+                            self.frames = 0
+                    elif not self.status == 'small':
+                        if self.frames == 12:
+                            self.change_image(7)
+                        elif self.frames == 24:
+                            self.change_image(8)
+                        elif self.frames == 36:
+                            self.change_image(9)
+                        elif self.frames >= 48:
+                            self.frames = 0
+                elif self.airborne:
+                    self.change_image(10)
+                if self.vel.x > 0 and not self.airborne:
+                    self.change_image(4)
            
-        elif keys[pygame.K_LEFT]:
-            # walking left
-            self.speed = 'walking'
+            elif keys[pygame.K_LEFT] and not keys[pygame.K_DOWN]:
+                # walking left
+                self.speed = 'walking'
             
-            self.acc.x = -PLAYER_WALK_ACCELERATION
-            self.direction = 'left'
-            if not self.airborne:
-                self.frames += 1
-                if self.status == 'small':
-                    if self.frames == 13:
-                        self.change_image(7)
-                    elif self.frames == 26:
-                        self.change_image(8)
-                    elif self.frames == 39:
-                        self.change_image(9)
-                    elif self.frames >= 51:
-                        self.frames = 0
-                    elif self.airborne:
-                        self.change_image(10)
-                elif not self.status == 'small':
-                    if self.frames == 17:
-                        self.change_image(7)
-                    elif self.frames == 34:
-                        self.change_image(8)
-                    elif self.frames == 61:
-                        self.change_image(9)
-                    elif self.frames >= 78:
-                        self.frames = 0
-            elif self.airborne:
-                self.change_image(10)
-            if self.vel.x > 0 and not self.airborne:
-                self.change_image(4)
+                self.acc.x = -PLAYER_WALK_ACCELERATION
+                self.direction = 'left'
+                if not self.airborne:
+                    self.frames += 1
+                    if self.status == 'small':
+                        if self.frames == 13:
+                            self.change_image(7)
+                        elif self.frames == 26:
+                            self.change_image(8)
+                        elif self.frames == 39:
+                            self.change_image(9)
+                        elif self.frames >= 51:
+                            self.frames = 0
+                        elif self.airborne:
+                            self.change_image(10)
+                    elif not self.status == 'small':
+                        if self.frames == 17:
+                            self.change_image(7)
+                        elif self.frames == 34:
+                            self.change_image(8)
+                        elif self.frames == 61:
+                            self.change_image(9)
+                        elif self.frames >= 78:
+                            self.frames = 0
+                elif self.airborne:
+                    self.change_image(10)
+                if self.vel.x > 0 and not self.airborne:
+                    self.change_image(4)
             
-        if not self.airborne and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-            self.frames = 0
-            if self.vel.x > 0:
-                self.change_image(0)
-            elif self.vel.x < 0:
-                self.change_image(6)
-            if self.direction == 'right':
-                self.change_image(0)
-            elif self.direction == 'left':
-                self.change_image(6)
+            if not self.airborne and not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_DOWN]:
+                self.frames = 0
+                if self.vel.x > 0:
+                    self.change_image(0)
+                elif self.vel.x < 0:
+                    self.change_image(6)
+                if self.direction == 'right':
+                    self.change_image(0)
+                elif self.direction == 'left':
+                    self.change_image(6)
+        
+        
+            if keys[pygame.K_DOWN]:
+                if not self.airborne:
+                    if not self.status == 'small':
+                        if self.direction == 'right':
+                            self.change_image(12)
+                        elif self.direction == 'left':
+                            self.change_image(13)
+            
 
         
-                #make mario lose momentum if he is already in the air
-        #and trying to move in the opposite direciton
-        if keys[pygame.K_LEFT] and self.airborne and self.vel.x > 0:
-            self.acc.x = DECELLERATION_ON_AIR
+            #make mario lose momentum if he is already in the air
+            #and trying to move in the opposite direciton
+            if keys[pygame.K_LEFT] and self.airborne and self.vel.x > 0:
+                self.acc.x = DECELLERATION_ON_AIR
 
-        if keys[pygame.K_RIGHT] and self.airborne and self.vel.x < 0:
-            self.acc.x = -DECELLERATION_ON_AIR
+            if keys[pygame.K_RIGHT] and self.airborne and self.vel.x < 0:
+                self.acc.x = -DECELLERATION_ON_AIR
         
 
-        #mario falls off pit, change to dead mario animation
-        if self.pos.y >= self.screen_rect.height + 10:
-            self.status = 'dead'
-            self.vel.x = 0
-            self.vel.y = -2
-            self.pos.y = self.screen_rect.height - 100
+            #mario falls off pit, change to dead mario animation
+            if self.pos.y >= self.screen_rect.height + 10:
+                self.status = 'dead'
             
-        # friction only applies in the x direction
+                pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
+            
+                self.vel.x = 0
+                self.vel.y = -2
+                self.pos.y = self.screen_rect.height - 100
+            
+            # friction only applies in the x direction
         
+
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
@@ -361,11 +413,14 @@ class Mario(Sprite):
         self.check_fireflower_collisions()
         self.check_one_up_mushroom_collisions()
         self.check_starman_collisions()
-
+        
         self.viewport(viewport)
         
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
+
+        self.check_pole_collisions(pole)
+
         
         
 
@@ -379,7 +434,7 @@ class Mario(Sprite):
         elif self.status == 'dead':
             self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
         self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image)            
         
         
     def blitme(self):
