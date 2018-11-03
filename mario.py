@@ -23,7 +23,8 @@ class Mario(Sprite):
 
         self.status = 'small'
         self.direction = 'right'
-
+        self.speed = 'walking'
+        
 
         #load all small mario sprites
         self.small_mario.append('resources/Images/smallMarioStandRight.gif')
@@ -103,7 +104,7 @@ class Mario(Sprite):
         hits = pygame.sprite.spritecollide(self, platforms_top, False)
         self.rect.y -= 1.1
         if hits:
-            self.vel.y = -1.98
+            self.vel.y = -2.5
             self.airborne = True
             
             # play jump sound effect
@@ -129,13 +130,15 @@ class Mario(Sprite):
             changed = True
 
         if changed:
-            self.pos.x -= abs(self.vel.x + 0.8)
+            if self.speed == 'walking':
+                self.pos.x -= abs(self.vel.x + 0.8)
+            elif self.speed == 'running':
+                self.pos.x -= abs(self.acc.x + 1)
             for groups in viewport:
-                #print groups
                 groups.rect.x -= abs(self.vel.x)
-                if groups.rect.x == 0:                    
-                    groups.kill()
-            
+                if groups.rect.x <= 0:                    
+                    groups.rect.x -= 1
+
             self.view_left = 0
         
         # prevent mario from falling if less than screen left
@@ -189,6 +192,7 @@ class Mario(Sprite):
         # update acceleration depending on when mario is running on walking
         if keys[pygame.K_RIGHT] and keys[pygame.K_s]:
             # running right
+            self.speed = 'running'
             self.acc.x = PLAYER_RUN_ACCELERATION
             self.direction = 'right'
             if not self.airborne:
@@ -220,6 +224,8 @@ class Mario(Sprite):
 
         elif keys[pygame.K_RIGHT]:
             # walking right
+            self.speed = 'walking'
+            
             self.acc.x = PLAYER_WALK_ACCELERATION
             self.direction = 'right'
             if not self.airborne:
@@ -251,6 +257,8 @@ class Mario(Sprite):
         if keys[pygame.K_LEFT] and keys[pygame.K_s]:
             # running left
             #running left
+            self.speed = 'running'
+            
             self.acc.x = -PLAYER_RUN_ACCELERATION
             self.direction = 'left'
             if not self.airborne:
@@ -280,6 +288,8 @@ class Mario(Sprite):
            
         elif keys[pygame.K_LEFT]:
             # walking left
+            self.speed = 'walking'
+            
             self.acc.x = -PLAYER_WALK_ACCELERATION
             self.direction = 'left'
             if not self.airborne:
@@ -333,17 +343,17 @@ class Mario(Sprite):
         #mario falls off pit, change to dead mario animation
         if self.pos.y >= self.screen_rect.height + 10:
             self.status = 'dead'
-            print self.screen_rect.height
-            print self.pos.y
             self.vel.x = 0
             self.vel.y = -2
             self.pos.y = self.screen_rect.height - 100
-            #self.change_image(12)
             
         # friction only applies in the x direction
+        
         self.acc.x += self.vel.x * FRICTION
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
+
+        
 
         self.rect.midbottom = self.pos
 
@@ -353,8 +363,10 @@ class Mario(Sprite):
         self.check_starman_collisions()
 
         self.viewport(viewport)
+        
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
+        
         
 
     def change_image(self,index):
@@ -365,14 +377,12 @@ class Mario(Sprite):
         elif self.status == 'fire':
             self.image = pygame.image.load(self.fire_mario[index]).convert_alpha()
         elif self.status == 'dead':
-            print self.status
             self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         
         
     def blitme(self):
-        # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
         pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
         

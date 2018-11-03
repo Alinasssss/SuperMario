@@ -50,7 +50,6 @@ def check_key_up(event, mario):
             
     if (event.key == pygame.K_LEFT and mario.vel.y > 0 and not mario.airborne) or (mario.vel.y == 0):
         if mario.vel.x <= 0 and not mario.airborne:
-            print 'change mario to standing left'
             mario.frames = 0
             mario.change_image(6)
             
@@ -60,7 +59,6 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
     if mario.vel.y > 0:
         feet_collisions = pygame.sprite.spritecollide(mario, platforms_top, False)
         if feet_collisions:
-            # print 'floor collides'
             mario.vel.y = 0
             mario.pos.y = feet_collisions[0].rect.top+1
             mario.airborne = False
@@ -69,7 +67,6 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
     if mario.vel.y < 0:
         head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False,pygame.sprite.collide_mask)
         if head_collision:
-            print('head collides')
             mario.vel.y = 0
             
 
@@ -79,7 +76,6 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
     if mario.vel.x > 0:
         wall_collision = pygame.sprite.spritecollide(mario, left_walls, False)
         if wall_collision:
-            print('left wall collision')
             mario.vel.x = 0
             mario.pos.x = wall_collision[0].rect.left - 12
     
@@ -89,6 +85,5 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
     if mario.vel.x < 0:
         wall_collision = pygame.sprite.spritecollide(mario, right_walls, False)
         if wall_collision:
-            print('right wall collision')
             mario.vel.x = 0
             mario.pos.x = wall_collision[0].rect.right + 12
