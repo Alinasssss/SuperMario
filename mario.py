@@ -15,15 +15,18 @@ class Mario(Sprite):
         # get the screen dims
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
+        
 
         #load all mario images
         self.frames = 0
+        self.star_frames = 0
         self.small_mario = []
         self.big_mario = []
         self.fire_mario = []
 
         self.status = 'small'
         self.direction = 'right'
+        self.starman = False
         self.speed = 'walking'
         self.finish = False
         
@@ -85,11 +88,12 @@ class Mario(Sprite):
         self.fire_mario.append('resources/Images/fireMarioShootRight.gif')
         self.fire_mario.append('resources/Images/fireMarioShootLeft.gif')
 
-        
-        
-
         # load image of mario
         self.image = pygame.image.load(self.small_mario[0]).convert_alpha()
+
+        self.pix_map = pygame.PixelArray(self.image)
+        
+        self.image = self.pix_map.make_surface()
 
         #self.change_image(0)
         self.rect = self.image.get_rect()
@@ -140,9 +144,11 @@ class Mario(Sprite):
 
         if changed:
             if self.speed == 'walking':
-                self.pos.x -= abs(self.vel.x + 0.8)
+                if not self.finish:
+                    self.pos.x -= abs(self.vel.x + 0.8)
             elif self.speed == 'running':
-                self.pos.x -= abs(self.acc.x + 1)
+                if not self.finish:
+                    self.pos.x -= abs(self.acc.x + 1)
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
                 if groups.rect.x <= 0:                    
@@ -200,6 +206,7 @@ class Mario(Sprite):
     def check_starman_collisions(self):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.starmen, True)
         if collisions:
+            self.starman = True
             pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
             pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/starman.wav'))
             
@@ -211,6 +218,7 @@ class Mario(Sprite):
         if self.finish == False:
             collision = pygame.sprite.spritecollide(self,pole,False,pygame.sprite.collide_mask)
             if collision:
+                self.pos.x = collision[0].rect.left
                 self.finish = True
                 if self.status == 'small':
                     self.change_image(13)
@@ -415,7 +423,7 @@ class Mario(Sprite):
         self.check_starman_collisions()
         
         self.viewport(viewport)
-        
+
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -425,6 +433,7 @@ class Mario(Sprite):
         
 
     def change_image(self,index):
+        
         if self.status == 'small':
             self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
         elif self.status == 'big':
@@ -433,9 +442,78 @@ class Mario(Sprite):
             self.image = pygame.image.load(self.fire_mario[index]).convert_alpha()
         elif self.status == 'dead':
             self.image = pygame.image.load(self.small_mario[index]).convert_alpha()
+
+        if self.starman:
+            #create a pixel_map of our image to manipulate
+            #and animate starman flashing powerup
+            self.pix_map = pygame.PixelArray(self.image)
+
+            #get size of x columsn and rows to iterate through
+            size_x,size_y = self.pix_map.shape
+        
+            keys = pygame.key.get_pressed()
+
+            if (keys[pygame.K_RIGHT] or keys[pygame.K_LEFT]):
+                self.star_frames += 11
+            if self.airborne:
+                self.star_frames -= 10
+            if not keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
+                self.star_frames += 1
+        
+        
+            if self.star_frames >= 1 and self.star_frames <= 20:
+                for i in range(size_x):
+                    for j in range(size_y):
+                        rgb = self.get_rgb_from_integer(self.pix_map[i,j])
+                        if rgb == (181,49,32) or rgb == (255,255,255):
+                            self.pix_map[i,j] = (12, 147, 0)
+                        if rgb == (107,109,0) or rgb == (211,32,32):
+                            self.pix_map[i,j] = (234,158,34)
+                        if rgb == (234,158,34):
+                            self.pix_map[i,j] = (255,254,255)
+        
+            if self.star_frames >= 21 and self.star_frames <= 40:
+                for i in range(size_x):
+                    for j in range(size_y):
+                        rgb = self.get_rgb_from_integer(self.pix_map[i,j])
+                        if rgb == (181,49,32) or rgb == (255,255,255):
+                            self.pix_map[i,j] = (181, 49, 32)
+                        if rgb == (107,109,0) or rgb == (211,32,32):
+                            self.pix_map[i,j] = (234,158,34)
+                        if rgb == (234,158,34):
+                            self.pix_map[i,j] = (255,254,255)
+        
+            if self.star_frames >= 41 and self.star_frames <= 60:
+                for i in range(size_x):
+                    for j in range(size_y):
+                        rgb = self.get_rgb_from_integer(self.pix_map[i,j])
+                        if rgb == (181,49,32) or rgb == (255,255,255):
+                            self.pix_map[i,j] = (0, 0, 0)
+                        if rgb == (107,109,0) or rgb == (211,32,32):
+                            self.pix_map[i,j] = (153,78,0)
+                        if rgb == (234,158,34):
+                            self.pix_map[i,j] = (254,204,197)
+        
+            if self.star_frames >= 61:
+                self.star_frames = 0
+        
+                    
+
+            #after pixel manipulation assign the image
+            #back to pygame surface image
+            self.image = self.pix_map.make_surface()
+        
+        
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)            
-        
+    
+    #for detecting the colors in rgb format
+    def get_rgb_from_integer(self,rgb_int):
+        blue =  rgb_int & 255
+        green = (rgb_int >> 8) & 255
+        red =   (rgb_int >> 16) & 255
+        return red, green, blue
+
         
     def blitme(self):
         self.screen.blit(self.image, self.rect)

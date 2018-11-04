@@ -65,7 +65,7 @@ def run_game():
     viewport.add(entity_gamemaster.starmen)
 
     mario = Mario(screen, entity_gamemaster)
-        
+
     while True:
         screen.fill(LIGHTBLUE)
 
@@ -87,7 +87,7 @@ def run_game():
         mystery_tiles.update()
         pole.update()
         fireballs.update(platforms_top,left_walls,right_walls)
-        # -------------------------------dddd------------------------------
+        # -------------------------------------------------------------
 
         mario.update(viewport,pole)
         pygame.display.flip()

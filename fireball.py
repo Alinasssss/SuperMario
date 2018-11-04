@@ -73,7 +73,7 @@ class Fireball(Sprite):
         elif self.frames == 100:
             self.frames = 0
 
-        if self.pos.y > self.screen_rect.height or self.pos.x > self.screen_rect.width:
+        if self.pos.y > self.screen_rect.bottom or self.pos.x > self.screen_rect.right or self.pos.x < self.screen_rect.left:
             self.kill()
         
 
