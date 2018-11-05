@@ -6,8 +6,8 @@ vector = pygame.math.Vector2
 
 class Fireball(Sprite):
 
-    def __init__(self,screen,mario):
-        super(Fireball,self).__init__()
+    def __init__(self, screen, mario):
+        super(Fireball, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -26,7 +26,6 @@ class Fireball(Sprite):
         self.fire_animation.append('resources/Images/fireball_left2.gif')
         self.fire_animation.append('resources/Images/fireball_left3.gif')
         self.fire_animation.append('resources/Images/fireball_left4.gif')
-
         
         # load image of mario
         self.image = pygame.image.load(self.fire_animation[0]).convert_alpha()
@@ -34,7 +33,7 @@ class Fireball(Sprite):
 
         self.mario = mario
 
-        #collision mask
+        # collision mask
         self.mask = pygame.mask.from_surface(self.image)
         
         self.vel = vector(0,0)
@@ -48,8 +47,7 @@ class Fireball(Sprite):
             self.pos = vector(mario.pos.x - 20,mario.pos.y - 32)
             self.direction = 'left'
 
-        
-    def update(self,platforms_top,left_walls,right_walls):
+    def update(self, platforms_top, left_walls, right_walls, enemy_gamemaster):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         if self.direction == 'right':
             self.acc = vector(0,GRAVITY)
@@ -75,23 +73,31 @@ class Fireball(Sprite):
 
         if self.pos.y > self.screen_rect.bottom or self.pos.x > self.screen_rect.right or self.pos.x < self.screen_rect.left:
             self.kill()
-        
 
-        #check ground collisions for fireballs
-        floor_collision = pygame.sprite.spritecollide(self,platforms_top,False,pygame.sprite.collide_mask)
+        # check ground collisions for fireballs
+        floor_collision = pygame.sprite.spritecollide(self, platforms_top, False, pygame.sprite.collide_mask)
         if floor_collision:
             self.vel.y = -1
         
-        left_wall_collision = pygame.sprite.spritecollide(self,left_walls,False,pygame.sprite.collide_mask)
+        left_wall_collision = pygame.sprite.spritecollide(self, left_walls, False, pygame.sprite.collide_mask)
         if left_wall_collision:
             self.kill()
 
-
-        right_wall_collision = pygame.sprite.spritecollide(self,left_walls,False,pygame.sprite.collide_mask)
+        right_wall_collision = pygame.sprite.spritecollide(self, left_walls, False, pygame.sprite.collide_mask)
         if right_wall_collision:
             self.kill()
-        
-        
+
+        goomba_collision = pygame.sprite.spritecollide(self, enemy_gamemaster.goombas, True)
+        if goomba_collision:
+            self.kill()
+            self.mario.gui.score += 100
+            self.mario.gui.update_score_text()
+
+        koopa_collision = pygame.sprite.spritecollide(self, enemy_gamemaster.koopas, True)
+        if koopa_collision:
+            self.kill()
+            self.mario.gui.score += 250
+            self.mario.gui.update_score_text()
 
         # friction only applies in the x direction
         self.acc.x += self.vel.x * FRICTION
@@ -103,15 +109,12 @@ class Fireball(Sprite):
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
 
-        
-    
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
-        pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
 
-
-    def change_image(self,index):
+    def change_image(self, index):
         if self.direction == 'right':
             self.image = pygame.image.load(self.fire_animation[index]).convert_alpha()
         elif self.direction == 'left':
@@ -119,6 +122,3 @@ class Fireball(Sprite):
         
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-    
-    
-    

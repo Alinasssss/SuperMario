@@ -1,9 +1,11 @@
 import pygame
 from tiles import Tiles
+from goomba import Goomba
+from koopa import Koopa
 
 
 class Map:
-    def __init__(self,screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles,mystery_tiles,pole):
+    def __init__(self, screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles, brick_tiles, mystery_tiles, pole, enemy_gamemaster, mario):
         file = open(file_map, 'r')
         lines = file.readlines()
 
@@ -68,10 +70,23 @@ class Map:
                 
                 if p == 'p':
                     flag_pole = Tiles(screen,x,y+32,'pole')
-
                     pole.add(flag_pole)
 
+                if p == 'G':
+                    goomba = Goomba(screen, mario, platforms_top, left_walls, right_walls)
+                    goomba.rect.center = (x, y)
+                    goomba.centerx = goomba.rect.centerx
+                    goomba.centery = goomba.rect.centery
+                    goomba.previous_centery = goomba.centery
+                    enemy_gamemaster.goombas.add(goomba)
 
+                if p == 'K':
+                    koopa = Koopa(screen, mario, platforms_top, left_walls, right_walls)
+                    koopa.rect.center = (x, y)
+                    koopa.centerx = koopa.rect.centerx
+                    koopa.centery = koopa.rect.centery
+                    koopa.previous_centery = koopa.centery
+                    enemy_gamemaster.koopas.add(koopa)
 
                 if p == '\n':
                     y += 32

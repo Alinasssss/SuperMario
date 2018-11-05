@@ -38,9 +38,12 @@ class Starman(Sprite):
             self.velocity_y = -0.6
 
         colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
+        if colliding_with_right_wall:
+            self.velocity_x = self.horizontal_speed
+
         colliding_with_left_wall = pygame.sprite.spritecollideany(self, self.left_walls)
-        if colliding_with_right_wall or colliding_with_left_wall:
-            self.horizontal_speed *= -1
+        if colliding_with_left_wall:
+            self.velocity_x = -self.horizontal_speed
 
         self.rect.center = (self.centerx, self.centery)
         self.blitme()
