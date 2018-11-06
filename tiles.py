@@ -25,7 +25,30 @@ class Tiles(Sprite):
             self.image = pygame.image.load('resources/Images/metalTile.gif')
         if tile_type == 'pole':
             self.image = pygame.image.load('resources/Images/pole.gif')
-
+        if tile_type == 'flag':
+            self.image = pygame.image.load('resources/Images/flag.gif')
+        if tile_type == 'bighill':
+            self.image = pygame.image.load('resources/Images/hillBig.gif')
+        if tile_type == 'smallhill':
+            self.image = pygame.image.load('resources/Images/hillSmall.gif')
+        if tile_type == 'cloud1':
+            self.image = pygame.image.load('resources/Images/cloud1.gif')
+        if tile_type == 'cloud2':
+            self.image = pygame.image.load('resources/Images/cloud2.gif')
+        if tile_type == 'cloud3':
+            self.image = pygame.image.load('resources/Images/cloud3.gif')
+        if tile_type == 'pipetop':
+            self.image = pygame.image.load('resources/Images/pipeTop.gif')
+        if tile_type == 'pipebottom':
+            self.image = pygame.image.load('resources/Images/pipeExtension.gif')
+        if tile_type == 'bush1':
+            self.image = pygame.image.load('resources/Images/bush1.gif')
+        if tile_type == 'bush2':
+            self.image = pygame.image.load('resources/Images/bush2.gif')
+        if tile_type == 'bush3':
+            self.image = pygame.image.load('resources/Images/bush3.gif')
+        if tile_type == 'castle':
+            self.image = pygame.image.load('resources/Images/castle.gif')
 
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
@@ -46,4 +69,4 @@ class Tiles(Sprite):
         self.blitme()
 
     def blitme(self):
-        self.screen.blit(self.image,self.rect)
+        self.screen.blit(self.image, self.rect)

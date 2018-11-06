@@ -32,6 +32,14 @@ def run_game():
     mystery_tiles = Group()
     pole = Group()
     fireballs = Group()
+    pipes = Group()
+    metal_tiles = Group()
+
+    # background objects
+    clouds = Group()
+    hills = Group()
+    bushes = Group()
+    castle = Group()
     
     # create a viewport and pass all objects into it for
     # easier management
@@ -46,7 +54,7 @@ def run_game():
 
     # create our map level and all objects within it
     map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,
-              brick_tiles, mystery_tiles, pole, enemy_gamemaster, mario)
+              brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario)
 
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)
@@ -57,6 +65,12 @@ def run_game():
     viewport.add(brick_tiles)
     viewport.add(mystery_tiles)
     viewport.add(pole)
+    viewport.add(clouds)
+    viewport.add(hills)
+    viewport.add(bushes)
+    viewport.add(pipes)
+    viewport.add(metal_tiles)
+    viewport.add(castle)
 
     viewport.add(entity_gamemaster.fireflowers)
     viewport.add(entity_gamemaster.mushrooms)
@@ -87,6 +101,12 @@ def run_game():
         brick_tiles.update()
         mystery_tiles.update()
         pole.update()
+        clouds.update()
+        hills.update()
+        bushes.update()
+        pipes.update()
+        metal_tiles.update()
+        castle.update()
         fireballs.update(platforms_top, left_walls, right_walls, enemy_gamemaster)
         # -------------------------------------------------------------
 
