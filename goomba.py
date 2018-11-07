@@ -50,10 +50,10 @@ class Goomba(Sprite):
         self.centerx = self.current_image.get_rect().centerx
         self.centery = self.current_image.get_rect().centery
 
-        self.velocity_x = 0.25
+        self.horizontal_speed = 0.75
+        self.velocity_x = self.horizontal_speed
         self.velocity_y = 0.1
         self.gravity = 0.01
-        self.horizontal_speed = 0.25
 
     def update(self):
         if self.dying:
@@ -110,7 +110,7 @@ class Goomba(Sprite):
         if self.mario.rect.colliderect(self.top_rect):
             self.mario.gui.score += 100
             self.mario.gui.update_score_text()
-            self.mario.vel.y = -1
+            self.mario.vel.y = -5
             self.perform_death()
         if self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect):
             print("haha")
