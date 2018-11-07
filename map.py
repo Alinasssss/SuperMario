@@ -2,10 +2,13 @@ import pygame
 from tiles import Tiles
 from goomba import Goomba
 from koopa import Koopa
+from mushroom import Mushroom
+from fireflower import Fireflower
+from starman import Starman
 
 
 class Map:
-    def __init__(self, screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles, brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario):
+    def __init__(self, screen, file_map, platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles, brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,coins,entity_gamemaster):
         file = open(file_map, 'r')
         lines = file.readlines()
 
@@ -22,7 +25,7 @@ class Map:
 
                     # 4 sided rectangle with independent collidable parts - - - - -
                     # this will serve as a mask for every game object that needs to be collidable
-                    platform_top = Tiles(screen, x, y, 'platform')
+                    platform_top = Tiles(screen, x, y+2, 'platform')
                     platform_bottom = Tiles(screen, x, y+34, 'platform')
                     wall_left = Tiles(screen, x-17, y+28, 'wall')
                     wall_right = Tiles(screen, x+18, y+28, 'wall')
@@ -41,26 +44,59 @@ class Map:
                 # want to add in the map.txt file
 
                 if p == 'b':
-                    platform_top = Tiles(screen,x,y+4,'platform')
-                    platform_bottom = Tiles(screen,x,y+34,'platform')
-                    wall_left = Tiles(screen,x-17,y+28,'wall')
-                    wall_right = Tiles(screen,x+18,y+28,'wall')
+                    platform_top = Tiles(screen,x+2,y+5,'platform')
+                    platform_bottom = Tiles(screen,x+2,y+35,'platform')
+                    wall_left = Tiles(screen,x-14,y+30,'wall')
+                    wall_right = Tiles(screen,x+16,y+30,'wall')
 
-                    brick_tile = Tiles(screen,x,y+32,'brick')
+                    brick_tile = Tiles(screen,x,y+34,'brick')
 
                     platforms_top.add(platform_top)
                     platforms_bottom.add(platform_bottom)
                     left_walls.add(wall_left)
                     right_walls.add(wall_right)
                     brick_tiles.add(brick_tile)
+                
+                if p == '1':
+
+                    coin = Tiles(screen,x,y+63,'coin')
+                    coins.add(coin)
+                
+                if p == '2':
+
+                    mushroom = Mushroom(screen,platforms_top,left_walls,right_walls,x,y+62)
+                    entity_gamemaster.mushrooms.add(mushroom)
+                if p == '3':
+                    
+                    star = Starman(screen,platforms_top,left_walls,right_walls,x,y+62)
+                    entity_gamemaster.starmen.add(star)
+                
+                if p == '4':
+                    flower = Fireflower(screen,x,y+94)
+                    entity_gamemaster.fireflowers.add(flower)
+                
+                if p == '5':
+
+                    platform_top = Tiles(screen,x+2,y+5,'platform')
+                    platform_bottom = Tiles(screen,x+2,y+35,'platform')
+                    wall_left = Tiles(screen,x-14,y+30,'wall')
+                    wall_right = Tiles(screen,x+16,y+30,'wall')
+
+                    mystery_tile = Tiles(screen,x,y+34,'brick')
+
+                    platforms_top.add(platform_top)
+                    platforms_bottom.add(platform_bottom)
+                    left_walls.add(wall_left)
+                    right_walls.add(wall_right)
+                    mystery_tiles.add(mystery_tile)
 
                 if p == 'm':
-                    platform_top = Tiles(screen,x,y+4,'platform')
-                    platform_bottom = Tiles(screen,x,y+34,'platform')
-                    wall_left = Tiles(screen,x-17,y+28,'wall')
-                    wall_right = Tiles(screen,x+18,y+28,'wall')
+                    platform_top = Tiles(screen,x+2,y+5,'platform')
+                    platform_bottom = Tiles(screen,x+2,y+35,'platform')
+                    wall_left = Tiles(screen,x-14,y+30,'wall')
+                    wall_right = Tiles(screen,x+16,y+30,'wall')
 
-                    mystery_tile = Tiles(screen,x,y+32,'mystery')
+                    mystery_tile = Tiles(screen,x,y+34,'mystery')
 
                     platforms_top.add(platform_top)
                     platforms_bottom.add(platform_bottom)
@@ -69,14 +105,16 @@ class Map:
                     mystery_tiles.add(mystery_tile)
 
                 if p == 't':
-                    platform_top = Tiles(screen, x, y + 4, 'platform')
+                    platform_top = Tiles(screen, x+16, y + 4, 'platform')
+                    platform_top2 = Tiles(screen,x-16,y+4,'platform')
                     platform_bottom = Tiles(screen, x, y + 34, 'platform')
-                    wall_left = Tiles(screen, x - 17, y + 28, 'wall')
-                    wall_right = Tiles(screen, x + 18, y + 28, 'wall')
+                    wall_left = Tiles(screen, x - 31, y + 28, 'wall')
+                    wall_right = Tiles(screen, x + 32, y + 28, 'wall')
 
                     pipeTop = Tiles(screen, x, y + 32, 'pipetop')
 
                     platforms_top.add(platform_top)
+                    platforms_top.add(platform_top2)
                     platforms_bottom.add(platform_bottom)
                     left_walls.add(wall_left)
                     right_walls.add(wall_right)
@@ -85,10 +123,10 @@ class Map:
                 if p == 'x':
                     platform_top = Tiles(screen, x, y + 4, 'platform')
                     platform_bottom = Tiles(screen, x, y + 34, 'platform')
-                    wall_left = Tiles(screen, x - 17, y + 28, 'wall')
-                    wall_right = Tiles(screen, x + 18, y + 28, 'wall')
+                    wall_left = Tiles(screen, x - 31, y + 28, 'wall')
+                    wall_right = Tiles(screen, x + 32, y + 28, 'wall')
 
-                    pipeExtension = Tiles(screen, x, y + 32, 'pipebottom')
+                    pipeExtension = Tiles(screen, x, y + 33, 'pipebottom')
 
                     platforms_top.add(platform_top)
                     platforms_bottom.add(platform_bottom)

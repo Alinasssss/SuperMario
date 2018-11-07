@@ -57,7 +57,7 @@ def check_key_up(event, mario):
                 mario.change_image(6)
             
 
-def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls,fireballs):
+def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls,fireballs,mystery_tiles,brick_tiles,coins,entity_gamemaster):
     # mario is coming down after having jumped, collide with top platform
     if mario.vel.y > 0:
         feet_collisions = pygame.sprite.spritecollide(mario, platforms_top, False)
@@ -68,9 +68,96 @@ def check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_w
             
     # mario collides with his head
     if mario.vel.y < 0:
-        head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False,pygame.sprite.collide_mask)
+        head_collision = pygame.sprite.spritecollide(mario, platforms_bottom, False)
         if head_collision:
             mario.vel.y = 0
+
+            head_collision[0].rect.y -= 23
+
+            #check what other components this bottom platforms collides with and move them up by the same amount
+            mystery_collision = pygame.sprite.spritecollide(head_collision[0],mystery_tiles,False)
+            if mystery_collision:
+                if mystery_collision[0].status == 'new':
+                    mystery_collision[0].rect.y -= 23
+
+                    top_collision = pygame.sprite.spritecollide(mystery_collision[0],platforms_top,False)
+                    if top_collision:
+                        top_collision[0].rect.y -= 23
+                
+                    left_collision = pygame.sprite.spritecollide(mystery_collision[0],left_walls,False)
+                    if left_collision:
+                        left_collision[0].rect.y -= 23
+                    
+                    right_collision = pygame.sprite.spritecollide(mystery_collision[0],right_walls,False)
+                    if right_collision:
+                        right_collision[0].rect.y -= 23
+                    
+                    coin_collision = pygame.sprite.spritecollide(mystery_collision[0],coins,False)
+                    if coin_collision:
+                        coin_collision[0].rect.y -= 95
+                    
+
+                    mushroom_collision = pygame.sprite.spritecollide(mystery_collision[0],entity_gamemaster.mushrooms,False)
+                    if mushroom_collision:
+                        mushroom_collision[0].rect.y -= 29
+                        mushroom_collision[0].start_movement = True
+                    
+                    if not mario.status == 'small':
+                        flower_collision = pygame.sprite.spritecollide(mystery_collision[0],entity_gamemaster.fireflowers,False)
+                        if flower_collision:
+                            flower_collision[0].rect.y -= 29
+                    
+                    star_collision = pygame.sprite.spritecollide(mystery_collision[0],entity_gamemaster.starmen,False)
+                    if star_collision:
+                        star_collision[0].rect.y -= 29
+                        star_collision[0].start_movement = True
+
+
+                    mystery_collision[0].status = 'used'
+                
+            #check what other components this bottom platforms collides with and move them up by the same amount
+            brick_collision = pygame.sprite.spritecollide(head_collision[0],brick_tiles,False)
+            if brick_collision:
+                brick_collision[0].rect.y -= 23
+                
+
+                top_collision = pygame.sprite.spritecollide(brick_collision[0],platforms_top,False)
+                if top_collision:
+                    if mario.status == 'big' or mario.status == 'fire':
+                        top_collision[0].rect.y -= 23
+                        top_collision[0].kill()
+                
+                    else:
+                        top_collision[0].rect.y -= 23
+                
+                left_collision = pygame.sprite.spritecollide(brick_collision[0],left_walls,False)
+                if left_collision:
+                    if mario.status == 'big' or mario.status == 'fire':
+                        left_collision[0].rect.y -= 23
+                        left_collision[0].kill()
+                    else:
+                        left_collision[0].rect.y -= 23
+                    
+                right_collision = pygame.sprite.spritecollide(brick_collision[0],right_walls,False)
+                if right_collision:
+                    if mario.status == 'big' or mario.status == 'fire':
+                        for r in right_collision:
+                            r.kill()
+                            
+                    else:
+                        for r in right_collision:
+                            r.rect.y -= 23
+                        
+                if mario.status == 'big' or mario.status == 'fire':
+                    brick_collision[0].kill()
+
+                if mario.status == 'big' or mario.status =='fire':
+                    head_collision[0].kill()
+            
+            
+
+            
+            
             
 
     # when mario is moving in the right direction, his velocity is greater than 0,

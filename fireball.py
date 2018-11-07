@@ -51,12 +51,12 @@ class Fireball(Sprite):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         if self.direction == 'right':
             self.acc = vector(0,GRAVITY)
-            self.acc.x += 0.01
-            self.vel.x = 1
+            self.acc.x += 0.06
+            self.vel.x = 4
         elif self.direction == 'left':
             self.acc = vector(0, GRAVITY)
-            self.acc.x -= 0.01
-            self.vel.x = -1
+            self.acc.x -= 0.06
+            self.vel.x = -4
         
         self.frames += 1
 
@@ -77,7 +77,7 @@ class Fireball(Sprite):
         # check ground collisions for fireballs
         floor_collision = pygame.sprite.spritecollide(self, platforms_top, False, pygame.sprite.collide_mask)
         if floor_collision:
-            self.vel.y = -1
+            self.vel.y = -4
         
         left_wall_collision = pygame.sprite.spritecollide(self, left_walls, False, pygame.sprite.collide_mask)
         if left_wall_collision:
@@ -112,7 +112,7 @@ class Fireball(Sprite):
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
-        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
 
     def change_image(self, index):
         if self.direction == 'right':

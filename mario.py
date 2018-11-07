@@ -101,7 +101,7 @@ class Mario(Sprite):
         self.view_left = 0
 
         # control vertical and horizontal velocity
-        self.pos = vector(self.screen_rect.width / 2, self.screen_rect.height)
+        self.pos = vector(self.screen_rect.width / 2, self.screen_rect.height - 50)
         self.vel = vector(0, 0)
         self.acc = vector(0, 0)
         self.airborne = False
@@ -118,7 +118,7 @@ class Mario(Sprite):
         hits = pygame.sprite.spritecollide(self, platforms_top, False)
         self.rect.y -= 1.1
         if hits:
-            self.vel.y = -2.5
+            self.vel.y = -6.7
             self.airborne = True
 
             # play jump sound effect
@@ -146,14 +146,14 @@ class Mario(Sprite):
         if changed:
             if self.speed == 'walking':
                 if not self.finish:
-                    self.pos.x -= abs(self.vel.x + 0.8)
+                    self.pos.x -= abs(self.vel.x + (PLAYER_WALK_ACCELERATION - FRICTION))
             elif self.speed == 'running':
                 if not self.finish:
-                    self.pos.x -= abs(self.acc.x + 1)
+                    self.pos.x -= abs(self.vel.x + (PLAYER_RUN_ACCELERATION - FRICTION))
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
                 if groups.rect.x <= 0:
-                    groups.rect.x -= 1
+                    groups.rect.x -= 0.5
 
             self.view_left = 0
 
@@ -503,4 +503,4 @@ class Mario(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

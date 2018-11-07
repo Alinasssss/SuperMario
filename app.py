@@ -34,6 +34,7 @@ def run_game():
     fireballs = Group()
     pipes = Group()
     metal_tiles = Group()
+    coins = Group()
 
     # background objects
     clouds = Group()
@@ -53,8 +54,9 @@ def run_game():
     mario = Mario(screen, entity_gamemaster, gui)
 
     # create our map level and all objects within it
-    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,
-              brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario)
+    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,coins,entity_gamemaster)
+
+    print len(entity_gamemaster.mushrooms)
 
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)
@@ -71,6 +73,7 @@ def run_game():
     viewport.add(pipes)
     viewport.add(metal_tiles)
     viewport.add(castle)
+    viewport.add(coins)
 
     viewport.add(entity_gamemaster.fireflowers)
     viewport.add(entity_gamemaster.mushrooms)
@@ -83,11 +86,11 @@ def run_game():
     while True:
         screen.fill(LIGHTBLUE)
 
-        entity_gamemaster.update()
         enemy_gamemaster.update()
+        entity_gamemaster.update()        
 
         e.check_events(mario, platforms_top, screen, fireballs)
-        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs)
+        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,mystery_tiles,brick_tiles,coins,entity_gamemaster)
 
         # each collision part is independently handled------------------
         platforms_top.update()
@@ -96,9 +99,10 @@ def run_game():
         right_walls.update()
         # --------------------------------------------------------------
         
-        # actual game objects, images, sprites, etc....................
+        # actual game objects, images, sprites, etc..d..................
         floor_tiles.update()
         brick_tiles.update()
+        coins.update()
         mystery_tiles.update()
         pole.update()
         clouds.update()
@@ -107,6 +111,7 @@ def run_game():
         pipes.update()
         metal_tiles.update()
         castle.update()
+                
         fireballs.update(platforms_top, left_walls, right_walls, enemy_gamemaster)
         # -------------------------------------------------------------
 
