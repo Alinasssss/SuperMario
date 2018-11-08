@@ -59,7 +59,7 @@ def run_game():
     # create our map level and all objects within it
     map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,coins,entity_gamemaster)
 
-    print len(entity_gamemaster.mushrooms)
+    print(len(entity_gamemaster.mushrooms))
 
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)

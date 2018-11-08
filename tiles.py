@@ -83,7 +83,7 @@ class Tiles(Sprite):
             
     def update(self):
         if self.destroy_self:
-            print 'kill myself'
+            print('kill myself')
             self.kill()
 
         #if the block has been hit and moved up, make it go back to original position
