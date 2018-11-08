@@ -52,10 +52,10 @@ class Koopa(Sprite):
         self.centerx = self.current_image.get_rect().centerx
         self.centery = self.current_image.get_rect().centery
 
-        self.horizontal_speed = 0.75
+        self.horizontal_speed = 1.5
         self.velocity_x = self.horizontal_speed
         self.velocity_y = 0.1
-        self.gravity = 0.01
+        self.gravity = 0.03
 
     def update(self):
         self.update_animation()

@@ -16,6 +16,9 @@ class Fireflower(Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.centerx = 0
+        
+
         #self.rect.center = (500, 550)
 
         #dummy code testing

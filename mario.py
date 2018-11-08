@@ -154,6 +154,8 @@ class Mario(Sprite):
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
                 groups.pos.x -= abs(self.vel.x)
+                groups.centerx -= abs(self.vel.x)
+                
                 if groups.rect.x <= 0:
                     groups.rect.x -= 0.1
 

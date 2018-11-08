@@ -18,6 +18,9 @@ class Tiles(Sprite):
 
         self.tile_type = tile_type
 
+        self.centerx = 0
+        
+
         #dummy code testing
         self.pos = vector(20,32)
         self.pos.x = 0
