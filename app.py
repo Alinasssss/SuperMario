@@ -92,7 +92,6 @@ def run_game():
     while True:
         screen.fill(LIGHTBLUE)
 
-        enemy_gamemaster.update()
         entity_gamemaster.update()        
 
         
@@ -118,6 +117,8 @@ def run_game():
         pipes.update()
         metal_tiles.update()
         castle.update()
+        enemy_gamemaster.update()
+        
         
                 
         fireballs.update(platforms_top, left_walls, right_walls, enemy_gamemaster)
