@@ -52,11 +52,11 @@ class Fireball(Sprite):
         if self.direction == 'right':
             self.acc = vector(0,GRAVITY)
             self.acc.x += 0.06
-            self.vel.x = 4
+            self.vel.x = 8
         elif self.direction == 'left':
             self.acc = vector(0, GRAVITY)
             self.acc.x -= 0.06
-            self.vel.x = -4
+            self.vel.x = -8
         
         self.frames += 1
 
@@ -75,15 +75,15 @@ class Fireball(Sprite):
             self.kill()
 
         # check ground collisions for fireballs
-        floor_collision = pygame.sprite.spritecollide(self, platforms_top, False, pygame.sprite.collide_mask)
+        floor_collision = pygame.sprite.spritecollide(self, platforms_top, False)
         if floor_collision:
-            self.vel.y = -4
+            self.vel.y = -7
         
-        left_wall_collision = pygame.sprite.spritecollide(self, left_walls, False, pygame.sprite.collide_mask)
+        left_wall_collision = pygame.sprite.spritecollide(self, left_walls, False)
         if left_wall_collision:
             self.kill()
 
-        right_wall_collision = pygame.sprite.spritecollide(self, left_walls, False, pygame.sprite.collide_mask)
+        right_wall_collision = pygame.sprite.spritecollide(self, left_walls, False)
         if right_wall_collision:
             self.kill()
 

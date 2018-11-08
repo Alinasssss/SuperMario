@@ -26,18 +26,18 @@ class Map:
                     # 4 sided rectangle with independent collidable parts - - - - -
                     # this will serve as a mask for every game object that needs to be collidable
                     platform_top = Tiles(screen, x, y+2, 'platform')
-                    platform_bottom = Tiles(screen, x, y+34, 'platform')
-                    wall_left = Tiles(screen, x-17, y+28, 'wall')
-                    wall_right = Tiles(screen, x+18, y+28, 'wall')
+                    #platform_bottom = Tiles(screen, x, y+34, 'platform')
+                    #wall_left = Tiles(screen, x-17, y+28, 'wall')
+                    #wall_right = Tiles(screen, x+18, y+28, 'wall')
                     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
                     # game object representation of floor tile
                     floor_tile = Tiles(screen, x+1, y+32, 'floor')
 
                     platforms_top.add(platform_top)
-                    platforms_bottom.add(platform_bottom)
-                    left_walls.add(wall_left)
-                    right_walls.add(wall_right)
+                    #platforms_bottom.add(platform_bottom)
+                    #left_walls.add(wall_left)
+                    #right_walls.add(wall_right)
                     floor_tiles.add(floor_tile)
 
                 # continue adding if statement for objects you
@@ -45,9 +45,9 @@ class Map:
 
                 if p == 'b':
                     platform_top = Tiles(screen,x+2,y+5,'platform')
-                    platform_bottom = Tiles(screen,x+2,y+35,'platform')
-                    wall_left = Tiles(screen,x-14,y+30,'wall')
-                    wall_right = Tiles(screen,x+16,y+30,'wall')
+                    platform_bottom = Tiles(screen,x+2,y+37,'platform')
+                    wall_left = Tiles(screen,x-14,y+31,'wall')
+                    wall_right = Tiles(screen,x+16,y+31,'wall')
 
                     brick_tile = Tiles(screen,x,y+34,'brick')
 
@@ -64,15 +64,15 @@ class Map:
                 
                 if p == '2':
 
-                    mushroom = Mushroom(screen,platforms_top,left_walls,right_walls,x,y+62)
+                    mushroom = Mushroom(screen,platforms_top,left_walls,right_walls,x,y+61)
                     entity_gamemaster.mushrooms.add(mushroom)
                 if p == '3':
                     
-                    star = Starman(screen,platforms_top,left_walls,right_walls,x,y+62)
+                    star = Starman(screen,platforms_top,left_walls,right_walls,x,y+61)
                     entity_gamemaster.starmen.add(star)
                 
                 if p == '4':
-                    flower = Fireflower(screen,x,y+94)
+                    flower = Fireflower(screen,x,y+93)
                     entity_gamemaster.fireflowers.add(flower)
                 
                 if p == '5':
@@ -92,9 +92,9 @@ class Map:
 
                 if p == 'm':
                     platform_top = Tiles(screen,x+2,y+5,'platform')
-                    platform_bottom = Tiles(screen,x+2,y+35,'platform')
-                    wall_left = Tiles(screen,x-14,y+30,'wall')
-                    wall_right = Tiles(screen,x+16,y+30,'wall')
+                    platform_bottom = Tiles(screen,x+2,y+37,'platform')
+                    wall_left = Tiles(screen,x-14,y+31,'wall')
+                    wall_right = Tiles(screen,x+16,y+31,'wall')
 
                     mystery_tile = Tiles(screen,x,y+34,'mystery')
 
@@ -105,10 +105,10 @@ class Map:
                     mystery_tiles.add(mystery_tile)
 
                 if p == 't':
-                    platform_top = Tiles(screen, x+16, y + 4, 'platform')
-                    platform_top2 = Tiles(screen,x-16,y+4,'platform')
+                    platform_top = Tiles(screen, x+18, y + 4, 'platform')
+                    platform_top2 = Tiles(screen,x-18,y+4,'platform')
                     platform_bottom = Tiles(screen, x, y + 34, 'platform')
-                    wall_left = Tiles(screen, x - 31, y + 28, 'wall')
+                    wall_left = Tiles(screen, x - 32, y + 28, 'wall')
                     wall_right = Tiles(screen, x + 32, y + 28, 'wall')
 
                     pipeTop = Tiles(screen, x, y + 32, 'pipetop')

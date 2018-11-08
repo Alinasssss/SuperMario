@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
+
 
 
 class Starman(Sprite):
@@ -14,6 +16,11 @@ class Starman(Sprite):
         self.right_walls = right_walls
 
         self.start_movement = False
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
+
 
         self.image = pygame.image.load('resources/Images/star1_resized.gif')
         self.rect = self.image.get_rect()

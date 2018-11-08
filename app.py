@@ -11,11 +11,14 @@ from gui import GUI
 
 def run_game():
     # initialize fonts
+    clock = pygame.time.Clock()
+    
+    # initialize sound mixer
+    pygame.mixer.pre_init(44100, -16, 2, 512)
+    pygame.mixer.init()
+
     pygame.init()
 
-    # initialize sound mixer
-    pygame.mixer.pre_init(22050, -16, 2, 512)
-    pygame.mixer.init()
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     
@@ -83,13 +86,17 @@ def run_game():
     viewport.add(enemy_gamemaster.goombas)
     viewport.add(enemy_gamemaster.koopas)
 
+    pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/themesong.wav'))
+                            
+
     while True:
         screen.fill(LIGHTBLUE)
 
         enemy_gamemaster.update()
         entity_gamemaster.update()        
 
-        e.check_events(mario, platforms_top, screen, fireballs)
+        
+        e.check_events(mario, platforms_top, screen, fireballs,viewport)
         e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,mystery_tiles,brick_tiles,coins,entity_gamemaster)
 
         # each collision part is independently handled------------------
@@ -111,6 +118,7 @@ def run_game():
         pipes.update()
         metal_tiles.update()
         castle.update()
+        
                 
         fireballs.update(platforms_top, left_walls, right_walls, enemy_gamemaster)
         # -------------------------------------------------------------
@@ -118,6 +126,5 @@ def run_game():
         mario.update(viewport, pole)
         gui.show_score()
         pygame.display.flip()
-
-
+        clock.tick(60)
 run_game()

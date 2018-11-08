@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
+
 
 
 class Fireflower(Sprite):
@@ -15,6 +17,11 @@ class Fireflower(Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
         #self.rect.center = (500, 550)
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
+
 
         self.rect.centerx = x
         self.rect.bottom = y

@@ -27,6 +27,7 @@ class Mario(Sprite):
         self.status = 'small'
         self.direction = 'right'
         self.starman = False
+        self.starman_timer = 0
         self.speed = 'walking'
         self.finish = False
 
@@ -118,7 +119,7 @@ class Mario(Sprite):
         hits = pygame.sprite.spritecollide(self, platforms_top, False)
         self.rect.y -= 1.1
         if hits:
-            self.vel.y = -6.7
+            self.vel.y = -13
             self.airborne = True
 
             # play jump sound effect
@@ -136,7 +137,7 @@ class Mario(Sprite):
 
     def viewport(self, viewport):
         changed = False
-
+        
         # Scroll right
         right_boundary = self.view_left + self.screen_rect.width - VIEWPORT_MARGIN
         if self.rect.right > right_boundary:
@@ -152,8 +153,9 @@ class Mario(Sprite):
                     self.pos.x -= abs(self.vel.x + (PLAYER_RUN_ACCELERATION - FRICTION))
             for groups in viewport:
                 groups.rect.x -= abs(self.vel.x)
+                groups.pos.x -= abs(self.vel.x)
                 if groups.rect.x <= 0:
-                    groups.rect.x -= 0.5
+                    groups.rect.x -= 0.1
 
             self.view_left = 0
 
@@ -163,8 +165,7 @@ class Mario(Sprite):
             self.pos.x += 1.2
 
     def check_mushroom_collisions(self):
-        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True,
-                                                 pygame.sprite.collide_mask)
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True)
         if collisions:
             pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
 
@@ -176,8 +177,7 @@ class Mario(Sprite):
                     self.change_image(6)
 
     def check_fireflower_collisions(self):
-        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True,
-                                                 pygame.sprite.collide_mask)
+        collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True)
         if collisions:
             pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
 
@@ -210,6 +210,7 @@ class Mario(Sprite):
         if not self.finish:
             collision = pygame.sprite.spritecollide(self, pole, False, pygame.sprite.collide_mask)
             if collision:
+                pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/flagpole.wav'))
                 self.pos.x = collision[0].rect.left
                 self.finish = True
                 if self.status == 'small':
@@ -224,6 +225,16 @@ class Mario(Sprite):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         self.acc = vector(0, GRAVITY)
 
+        if self.starman == True:
+            self.starman_timer += 1
+        
+        if self.starman_timer == 800:
+            self.starman = False
+            self.starman_timer = 0
+            pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/themesong.wav'))
+    
+        
+
         keys = pygame.key.get_pressed()
 
         if not self.finish:
@@ -236,22 +247,22 @@ class Mario(Sprite):
                 if not self.airborne:
                     self.frames += 1
                     if self.status == 'small':
-                        if self.frames == 9:
+                        if self.frames == 3:
                             self.change_image(1)
-                        elif self.frames == 18:
+                        elif self.frames == 6:
                             self.change_image(2)
-                        elif self.frames == 27:
+                        elif self.frames == 9:
                             self.change_image(3)
-                        elif self.frames >= 34:
+                        elif self.frames >= 12:
                             self.frames = 0
                     elif not self.status == 'small':
-                        if self.frames == 12:
+                        if self.frames == 2:
                             self.change_image(1)
-                        elif self.frames == 24:
+                        elif self.frames == 4:
                             self.change_image(2)
-                        elif self.frames == 36:
+                        elif self.frames == 6:
                             self.change_image(3)
-                        elif self.frames >= 48:
+                        elif self.frames >= 8:
                             self.frames = 0
 
                 elif self.airborne:
@@ -268,22 +279,22 @@ class Mario(Sprite):
                 if not self.airborne:
                     self.frames += 1
                     if self.status == 'small':
-                        if self.frames == 13:
+                        if self.frames == 4:
                             self.change_image(1)
-                        elif self.frames == 26:
+                        elif self.frames == 8:
                             self.change_image(2)
-                        elif self.frames == 39:
+                        elif self.frames == 12:
                             self.change_image(3)
-                        elif self.frames >= 51:
+                        elif self.frames >= 16:
                             self.frames = 0
                     elif not self.status == 'small':
-                        if self.frames == 17:
+                        if self.frames == 3:
                             self.change_image(1)
-                        elif self.frames == 34:
+                        elif self.frames == 6:
                             self.change_image(2)
-                        elif self.frames == 61:
+                        elif self.frames == 9:
                             self.change_image(3)
-                        elif self.frames >= 78:
+                        elif self.frames >= 12:
                             self.frames = 0
 
                 elif self.airborne:
@@ -301,22 +312,22 @@ class Mario(Sprite):
                 if not self.airborne:
                     self.frames += 1
                     if self.status == 'small':
-                        if self.frames == 9:
+                        if self.frames == 3:
                             self.change_image(7)
-                        elif self.frames == 18:
+                        elif self.frames == 6:
                             self.change_image(8)
-                        elif self.frames == 27:
+                        elif self.frames == 9:
                             self.change_image(9)
-                        elif self.frames >= 34:
+                        elif self.frames >= 12:
                             self.frames = 0
                     elif not self.status == 'small':
-                        if self.frames == 12:
+                        if self.frames == 2:
                             self.change_image(7)
-                        elif self.frames == 24:
+                        elif self.frames == 4:
                             self.change_image(8)
-                        elif self.frames == 36:
+                        elif self.frames == 6:
                             self.change_image(9)
-                        elif self.frames >= 48:
+                        elif self.frames >= 8:
                             self.frames = 0
                 elif self.airborne:
                     self.change_image(10)
@@ -332,24 +343,24 @@ class Mario(Sprite):
                 if not self.airborne:
                     self.frames += 1
                     if self.status == 'small':
-                        if self.frames == 13:
+                        if self.frames == 4:
                             self.change_image(7)
-                        elif self.frames == 26:
+                        elif self.frames == 8:
                             self.change_image(8)
-                        elif self.frames == 39:
+                        elif self.frames == 12:
                             self.change_image(9)
-                        elif self.frames >= 51:
+                        elif self.frames >= 16:
                             self.frames = 0
                         elif self.airborne:
                             self.change_image(10)
                     elif not self.status == 'small':
-                        if self.frames == 17:
+                        if self.frames == 3:
                             self.change_image(7)
-                        elif self.frames == 34:
+                        elif self.frames == 6:
                             self.change_image(8)
-                        elif self.frames == 61:
+                        elif self.frames == 9:
                             self.change_image(9)
-                        elif self.frames >= 78:
+                        elif self.frames >= 12:
                             self.frames = 0
                 elif self.airborne:
                     self.change_image(10)

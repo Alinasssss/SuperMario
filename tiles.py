@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
 
 
 class Tiles(Sprite):
@@ -16,6 +17,10 @@ class Tiles(Sprite):
         self.destroy_self = False
 
         self.tile_type = tile_type
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
 
         # create wall or floor tile depending on type input
         if self.tile_type == 'platform':
@@ -112,3 +117,5 @@ class Tiles(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+

@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
 
 
 class Mushroom(Sprite):
@@ -14,6 +15,11 @@ class Mushroom(Sprite):
         self.right_walls = right_walls
 
         self.start_movement= False
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
+
 
         self.image = pygame.image.load('resources/Images/growMushroom1.gif')
         self.rect = self.image.get_rect()
@@ -64,11 +70,9 @@ class Mushroom(Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         #self.rect.center = (self.centerx, self.centery)
         
-        self.mask = pygame.mask.from_surface(self.image)
         
         self.blitme()
-        self.mask = pygame.mask.from_surface(self.image)
-    
+        
     def blitme(self):
         self.screen.blit(self.image, self.rect)
         #pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
