@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
+
 
 
 class Goomba(Sprite):
@@ -21,6 +23,11 @@ class Goomba(Sprite):
 
         self.death_animation_timer_length = 1000
         self.dying = False
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
+
 
         self.last_frame_ticks = pygame.time.get_ticks()
         self.delta_time = 0

@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+vector = pygame.math.Vector2
+
 
 
 class Koopa(Sprite):
@@ -20,6 +22,11 @@ class Koopa(Sprite):
         self.current_animation_frame = 0
         self.last_frame_ticks = pygame.time.get_ticks()
         self.delta_time = 0
+
+        #dummy code testing
+        self.pos = vector(20,32)
+        self.pos.x = 0
+
 
         self.image_frames = [
             pygame.image.load('resources/Images/koopa1left.gif'),
