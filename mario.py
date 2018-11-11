@@ -157,7 +157,12 @@ class Mario(Sprite):
                 groups.centerx -= abs(self.vel.x)
                 
                 if groups.rect.x <= 0:
-                    groups.rect.x -= 0.1
+                    groups.rect.x -= 1
+                    groups.pos.x -= 1
+                    groups.centerx -= 1
+                    if groups.rect.x <= -150:
+                        groups.kill()
+                
 
             self.view_left = 0
 

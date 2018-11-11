@@ -16,6 +16,9 @@ class Fireball(Sprite):
         self.fire_animation = []
         self.direction = 'right'
 
+        #dummy code
+        self.centerx = 0
+
         self.shots = 2
         
         self.fire_animation.append('resources/Images/fireball_right1.gif')

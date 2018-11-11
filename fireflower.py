@@ -6,13 +6,13 @@ vector = pygame.math.Vector2
 
 class Fireflower(Sprite):
 
-    def __init__(self, screen,x,y):
+    def __init__(self, screen,mystery):
         super(Fireflower, self).__init__()
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
-        self.image = pygame.image.load('resources/Images/flower_resized.gif')
+        self.image = pygame.image.load('resources/Images/flower1.gif')
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -26,8 +26,8 @@ class Fireflower(Sprite):
         self.pos.x = 0
 
 
-        self.rect.centerx = x
-        self.rect.bottom = y
+        self.rect.centerx = mystery.rect.x + 15
+        self.rect.bottom = mystery.rect.y + 25
 
     def update(self):
         self.blitme()

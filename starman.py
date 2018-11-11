@@ -6,7 +6,7 @@ vector = pygame.math.Vector2
 
 class Starman(Sprite):
 
-    def __init__(self, screen, platform_tops, left_walls, right_walls,x,y):
+    def __init__(self, screen, platform_tops, left_walls, right_walls,mystery):
         super(Starman, self).__init__()
 
         self.screen = screen
@@ -22,45 +22,48 @@ class Starman(Sprite):
         self.pos.x = 0
 
 
-        self.image = pygame.image.load('resources/Images/star1_resized.gif')
+        self.image = pygame.image.load('resources/Images/star1.gif')
         self.rect = self.image.get_rect()
 
         #self.rect.center = (400, 400)
-        self.centerx = self.rect.centerx
-        self.centery = self.rect.centery
+        #self.centerx = self.rect.centerx
+        self.centerx = mystery.rect.x + 10
+
+
+
+        #self.centery = self.rect.centery
+        self.centery = mystery.rect.y
+
+
+
         self.previous_centery = self.centery
 
-        self.rect.centerx = x
-        self.rect.bottom = y
-
-
-        self.velocity_x = 0
+        self.velocity_x = 1
         self.velocity_y = 0.1
-        self.gravity = 0.002
-        self.horizontal_speed = 0.2
+        self.gravity = 0.05
+        self.horizontal_speed = 0.5
 
     def update(self):
         # when brick is hit, spawn starman
-        if self.start_movement:
-            self.centerx += self.velocity_x
+        self.centerx += self.velocity_x
 
-            self.centery += self.velocity_y
-            self.velocity_y += self.gravity
+        self.centery += self.velocity_y
+        self.velocity_y += self.gravity
 
-            colliding_with_floor = pygame.sprite.spritecollideany(self, self.platform_tops)
-            if colliding_with_floor:
-                self.velocity_x = self.horizontal_speed
-                self.velocity_y = -0.6
+        colliding_with_floor = pygame.sprite.spritecollideany(self, self.platform_tops)
+        if colliding_with_floor:
+            self.velocity_x = self.horizontal_speed
+            self.velocity_y = -2.6
 
-            colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
-            if colliding_with_right_wall:
-                self.velocity_x = self.horizontal_speed
+        colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
+        if colliding_with_right_wall:
+            self.velocity_x = self.horizontal_speed
 
-            colliding_with_left_wall = pygame.sprite.spritecollideany(self, self.left_walls)
-            if colliding_with_left_wall:
-                self.velocity_x = -self.horizontal_speed
+        colliding_with_left_wall = pygame.sprite.spritecollideany(self, self.left_walls)
+        if colliding_with_left_wall:
+            self.velocity_x = -self.horizontal_speed
 
-        #self.rect.center = (self.centerx, self.centery)
+        self.rect.center = (self.centerx, self.centery)
         self.blitme()
 
     def blitme(self):

@@ -4,7 +4,7 @@ vector = pygame.math.Vector2
 
 
 class Tiles(Sprite):
-    def __init__(self, screen, x, y, tile_type):
+    def __init__(self, screen, x, y, tile_type,id):
         super(Tiles, self).__init__()
 
         # get the screen dims
@@ -17,6 +17,7 @@ class Tiles(Sprite):
         self.destroy_self = False
 
         self.tile_type = tile_type
+        self.id = id
 
         self.centerx = 0
         

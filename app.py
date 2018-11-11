@@ -57,10 +57,9 @@ def run_game():
     mario = Mario(screen, entity_gamemaster, gui)
 
     # create our map level and all objects within it
-    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,coins,entity_gamemaster)
+    map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,entity_gamemaster)
 
-    print(len(entity_gamemaster.mushrooms))
-
+    
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)
     viewport.add(platforms_bottom)
@@ -76,13 +75,12 @@ def run_game():
     viewport.add(pipes)
     viewport.add(metal_tiles)
     viewport.add(castle)
-    viewport.add(coins)
-
+    
     viewport.add(entity_gamemaster.fireflowers)
     viewport.add(entity_gamemaster.mushrooms)
     viewport.add(entity_gamemaster.one_up_mushrooms)
     viewport.add(entity_gamemaster.starmen)
-
+    
     viewport.add(enemy_gamemaster.goombas)
     viewport.add(enemy_gamemaster.koopas)
 
@@ -96,7 +94,7 @@ def run_game():
 
         
         e.check_events(mario, platforms_top, screen, fireballs,viewport)
-        e.check_collisions(mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,mystery_tiles,brick_tiles,coins,entity_gamemaster)
+        e.check_collisions(screen,mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,mystery_tiles,brick_tiles,entity_gamemaster,viewport)
 
         # each collision part is independently handled------------------
         platforms_top.update()
@@ -118,8 +116,6 @@ def run_game():
         metal_tiles.update()
         castle.update()
         enemy_gamemaster.update()
-        
-        
                 
         fireballs.update(platforms_top, left_walls, right_walls, enemy_gamemaster)
         # -------------------------------------------------------------
