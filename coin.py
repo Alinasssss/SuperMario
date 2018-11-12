@@ -29,7 +29,6 @@ class Coin(Sprite):
         self.acc = vector(0,0)
 
         self.centerx = 0
-        
 
         self.pos = vector(mystery.rect.x + 16,mystery.rect.y - 32)
             
@@ -53,8 +52,7 @@ class Coin(Sprite):
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
 
-        
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
-        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+        # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

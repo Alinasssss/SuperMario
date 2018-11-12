@@ -3,9 +3,7 @@ from pygame.sprite import Sprite
 vector = pygame.math.Vector2
 
 
-
 class Koopa(Sprite):
-
     def __init__(self, screen, mario, platform_tops, left_walls, right_walls):
         super(Koopa, self).__init__()
 
@@ -26,10 +24,9 @@ class Koopa(Sprite):
         self.death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
         self.starman_death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
 
-        #dummy code testing
+        # dummy code testing
         self.pos = vector(20,32)
         self.pos.x = 0
-
 
         self.image_frames = [
             pygame.image.load('resources/Images/koopa1left.gif'),
@@ -48,7 +45,7 @@ class Koopa(Sprite):
         self.left_rect.width = self.left_rect.width/4
         self.left_rect.height = self.left_rect.height/2
 
-        self.right_rect = self.current_image.get_rect() # Used for mario collisions
+        self.right_rect = self.current_image.get_rect()     # Used for mario collisions
         self.right_rect.width = self.right_rect.width/4
         self.right_rect.height = self.right_rect.height/2
 
@@ -124,7 +121,8 @@ class Koopa(Sprite):
                 pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
                 self.mario.vel.x = 0
                 self.mario.vel.y = -12
-        if (self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect)) and self.mario.status != "dead":
+        if (self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect))\
+                and self.mario.status != "dead":
             # print("gotcha haha")
             self.mario.status = 'dead'
             pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))

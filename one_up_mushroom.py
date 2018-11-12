@@ -47,7 +47,6 @@ class OneUpMushroom(Sprite):
         self.blitme()
         self.mask = pygame.mask.from_surface(self.image)
 
-
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-        pygame.draw.rect(self.screen,(255,0,0),self.rect,1)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

@@ -19,7 +19,6 @@ def run_game():
 
     pygame.init()
 
-
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     
     # to hold all tiles from the map
@@ -27,7 +26,6 @@ def run_game():
     platforms_bottom = Group()
     left_walls = Group()
     right_walls = Group()
-    floor_tiles = Group()
 
     # actual game objects
     floor_tiles = Group()
@@ -59,7 +57,6 @@ def run_game():
     # create our map level and all objects within it
     map = Map(screen, 'resources/map.txt', platforms_top, platforms_bottom, left_walls, right_walls, floor_tiles,brick_tiles, mystery_tiles, pole, clouds, hills, bushes, pipes, metal_tiles, castle, enemy_gamemaster, mario,entity_gamemaster)
 
-    
     # pass all objects groups into viewport so that they get updated with mario x movement creating a scrolling effect
     viewport.add(platforms_top)
     viewport.add(platforms_bottom)
@@ -85,16 +82,15 @@ def run_game():
     viewport.add(enemy_gamemaster.koopas)
 
     pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/themesong.wav'))
-                            
 
     while True:
         screen.fill(LIGHTBLUE)
 
         entity_gamemaster.update()        
 
-        
-        e.check_events(mario, platforms_top, screen, fireballs,viewport)
-        e.check_collisions(screen,mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,mystery_tiles,brick_tiles,entity_gamemaster,viewport)
+        e.check_events(mario, platforms_top, screen, fireballs, viewport)
+        e.check_collisions(screen, mario, platforms_top, platforms_bottom, left_walls, right_walls, fireballs,
+                           mystery_tiles, brick_tiles, entity_gamemaster, viewport)
 
         # each collision part is independently handled------------------
         platforms_top.update()
@@ -124,4 +120,6 @@ def run_game():
         gui.show_score()
         pygame.display.flip()
         clock.tick(60)
+
+
 run_game()

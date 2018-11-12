@@ -4,7 +4,7 @@ vector = pygame.math.Vector2
 
 
 class Tiles(Sprite):
-    def __init__(self, screen, x, y, tile_type,id):
+    def __init__(self, screen, x, y, tile_type, id):
         super(Tiles, self).__init__()
 
         # get the screen dims
@@ -20,10 +20,9 @@ class Tiles(Sprite):
         self.id = id
 
         self.centerx = 0
-        
 
-        #dummy code testing
-        self.pos = vector(20,32)
+        # dummy code testing
+        self.pos = vector(20, 32)
         self.pos.x = 0
 
         # create wall or floor tile depending on type input
@@ -74,8 +73,7 @@ class Tiles(Sprite):
         self.rect.y = self.rect.height
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
-        
-        
+
         self.rect.centerx = x
         self.rect.bottom = y
 
@@ -90,7 +88,7 @@ class Tiles(Sprite):
             print('kill myself')
             self.kill()
 
-        #if the block has been hit and moved up, make it go back to original position
+        # if the block has been hit and moved up, make it go back to original position
         if not self.original_y == self.rect.bottom:
             self.rect.bottom += 1
             if self.tile_type == 'coin':
@@ -102,7 +100,7 @@ class Tiles(Sprite):
         if self.status == 'new' and self.tile_type == 'mystery':
             self.frames += 1
             
-            #animate the mystery box tile
+            # animate the mystery box tile
             if self.frames == 1:
                 self.image = pygame.image.load('resources/Images/mysteryBox1.gif')
             if self.frames == 40:
@@ -114,12 +112,10 @@ class Tiles(Sprite):
 
         if self.status == 'used':
             self.image = pygame.image.load('resources/Images/mysteryBoxUsed.gif')
-                    
-        
-        self.mask = pygame.mask.from_surface(self.image)            
+
+        self.mask = pygame.mask.from_surface(self.image)
         self.blitme()
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
-
+        # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

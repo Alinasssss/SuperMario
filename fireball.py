@@ -16,7 +16,7 @@ class Fireball(Sprite):
         self.fire_animation = []
         self.direction = 'right'
 
-        #dummy code
+        # dummy code
         self.centerx = 0
 
         self.shots = 2
@@ -115,7 +115,7 @@ class Fireball(Sprite):
     def blitme(self):
         # print self.rect.centerx
         self.screen.blit(self.image, self.rect)
-        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+        # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
 
     def change_image(self, index):
         if self.direction == 'right':
