@@ -23,6 +23,9 @@ class Koopa(Sprite):
         self.last_frame_ticks = pygame.time.get_ticks()
         self.delta_time = 0
 
+        self.death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
+        self.starman_death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
+
         #dummy code testing
         self.pos = vector(20,32)
         self.pos.x = 0
@@ -55,7 +58,7 @@ class Koopa(Sprite):
         self.horizontal_speed = 1.5
         self.velocity_x = self.horizontal_speed
         self.velocity_y = 0.1
-        self.gravity = 0.03
+        self.gravity = 0.15
 
     def update(self):
         self.update_animation()
@@ -101,13 +104,32 @@ class Koopa(Sprite):
             self.current_image = self.image_frames[self.current_animation_frame]
 
     def check_mario_collision(self):
-        if self.mario.rect.colliderect(self.top_rect):
-            self.mario.gui.score += 250
+        if self.mario.rect.colliderect(self.rect) and self.mario.starman:
+            self.mario.gui.score += 100
             self.mario.gui.update_score_text()
-            self.mario.vel.y = -5
+            self.starman_death_sound.play()
             self.kill()
-        if self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect):
-            print("haha")
+            return
+
+        if self.mario.rect.colliderect(self.top_rect) and self.mario.status != "dead":
+            if self.mario.rect.centery < self.centery:
+                self.mario.gui.score += 250
+                self.mario.gui.update_score_text()
+                self.mario.vel.y = -8
+                self.death_sound.play()
+                self.kill()
+            else:
+                # print("gotcha haha")
+                self.mario.status = 'dead'
+                pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
+                self.mario.vel.x = 0
+                self.mario.vel.y = -12
+        if (self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect)) and self.mario.status != "dead":
+            # print("gotcha haha")
+            self.mario.status = 'dead'
+            pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
+            self.mario.vel.x = 0
+            self.mario.vel.y = -12
 
     def blitme(self):
         if self.velocity_x > 0:
@@ -116,8 +138,8 @@ class Koopa(Sprite):
             self.screen.blit(self.current_image, self.rect)
 
         # Draw debug hitboxes
-        pygame.draw.rect(self.screen, (0, 0, 255), self.rect, 1)
+        '''pygame.draw.rect(self.screen, (0, 0, 255), self.rect, 1)
         pygame.draw.rect(self.screen, (0, 255, 255), self.environment_rect, 1)
         pygame.draw.rect(self.screen, (0, 255, 0), self.top_rect, 1)
         pygame.draw.rect(self.screen, (255, 0, 0), self.left_rect, 1)
-        pygame.draw.rect(self.screen, (255, 0, 0), self.right_rect, 1)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.right_rect, 1)'''

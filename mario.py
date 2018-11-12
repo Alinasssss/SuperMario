@@ -162,7 +162,6 @@ class Mario(Sprite):
                     groups.centerx -= 1
                     if groups.rect.x <= -150:
                         groups.kill()
-                
 
             self.view_left = 0
 
@@ -175,6 +174,8 @@ class Mario(Sprite):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.mushrooms, True)
         if collisions:
             pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            self.gui.score += 1000
+            self.gui.update_score_text()
 
             if self.status == 'small':
                 self.status = 'big'
@@ -187,6 +188,8 @@ class Mario(Sprite):
         collisions = pygame.sprite.spritecollide(self, self.entity_gamemaster.fireflowers, True)
         if collisions:
             pygame.mixer.Channel(2).play(pygame.mixer.Sound('resources/sounds/powerup.wav'))
+            self.gui.score += 1000
+            self.gui.update_score_text()
 
             if self.status == 'small':
                 self.status = 'big'
@@ -232,15 +235,13 @@ class Mario(Sprite):
         # set initial acceleration to 0 on x direction and gravity on the downward direction
         self.acc = vector(0, GRAVITY)
 
-        if self.starman == True:
+        if self.starman:
             self.starman_timer += 1
         
         if self.starman_timer == 800:
             self.starman = False
             self.starman_timer = 0
             pygame.mixer.Channel(5).play(pygame.mixer.Sound('resources/sounds/themesong.wav'))
-    
-        
 
         keys = pygame.key.get_pressed()
 
@@ -521,4 +522,4 @@ class Mario(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-        #pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)
+        # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

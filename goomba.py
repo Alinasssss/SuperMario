@@ -22,6 +22,8 @@ class Goomba(Sprite):
         self.current_animation_frame = 0
 
         self.death_animation_timer_length = 1000
+        self.death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
+        self.starman_death_sound = pygame.mixer.Sound('resources/sounds/stomp.wav')
         self.dying = False
 
         #dummy code testing
@@ -60,7 +62,7 @@ class Goomba(Sprite):
         self.horizontal_speed = 1.5
         self.velocity_x = self.horizontal_speed
         self.velocity_y = 0.1
-        self.gravity = 0.03
+        self.gravity = 0.15
 
     def update(self):
         if self.dying:
@@ -114,13 +116,32 @@ class Goomba(Sprite):
             self.current_image = self.image_frames[self.current_animation_frame]
 
     def check_mario_collision(self):
-        if self.mario.rect.colliderect(self.top_rect):
+        if self.mario.rect.colliderect(self.rect) and self.mario.starman and not self.dying:
             self.mario.gui.score += 100
             self.mario.gui.update_score_text()
-            self.mario.vel.y = -5
+            self.starman_death_sound.play()
             self.perform_death()
-        if self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect):
-            print("haha")
+            return
+
+        if self.mario.rect.colliderect(self.top_rect) and self.mario.status != "dead":
+            if self.mario.rect.centery < self.centery:
+                self.mario.gui.score += 100
+                self.mario.gui.update_score_text()
+                self.mario.vel.y = -8
+                self.death_sound.play()
+                self.perform_death()
+            else:
+                # print("gotcha haha")
+                self.mario.status = 'dead'
+                pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
+                self.mario.vel.x = 0
+                self.mario.vel.y = -12
+        if (self.mario.rect.colliderect(self.left_rect) or self.mario.rect.colliderect(self.right_rect)) and self.mario.status != "dead":
+            # print("gotcha haha")
+            self.mario.status = 'dead'
+            pygame.mixer.Channel(4).play(pygame.mixer.Sound('resources/sounds/mariodies.wav'))
+            self.mario.vel.x = 0
+            self.mario.vel.y = -12
 
     def perform_death(self):
         self.dying = True
@@ -136,8 +157,8 @@ class Goomba(Sprite):
 
     def blitme(self):
         self.screen.blit(self.current_image, self.rect)
-        pygame.draw.rect(self.screen, (0, 0, 255), self.rect, 1)
+        '''pygame.draw.rect(self.screen, (0, 0, 255), self.rect, 1)
         pygame.draw.rect(self.screen, (0, 255, 255), self.environment_rect, 1)
         pygame.draw.rect(self.screen, (0, 255, 0), self.top_rect, 1)
         pygame.draw.rect(self.screen, (255, 0, 0), self.left_rect, 1)
-        pygame.draw.rect(self.screen, (255, 0, 0), self.right_rect, 1)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.right_rect, 1)'''

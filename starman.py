@@ -40,8 +40,8 @@ class Starman(Sprite):
 
         self.velocity_x = 1
         self.velocity_y = 0.1
-        self.gravity = 0.05
-        self.horizontal_speed = 0.5
+        self.gravity = 0.15
+        self.horizontal_speed = 1
 
     def update(self):
         # when brick is hit, spawn starman
@@ -52,8 +52,7 @@ class Starman(Sprite):
 
         colliding_with_floor = pygame.sprite.spritecollideany(self, self.platform_tops)
         if colliding_with_floor:
-            self.velocity_x = self.horizontal_speed
-            self.velocity_y = -2.6
+            self.velocity_y = -4
 
         colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
         if colliding_with_right_wall:

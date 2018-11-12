@@ -93,7 +93,11 @@ def check_collisions(screen,mario, platforms_top, platforms_bottom, left_walls, 
                         coin = Coin(screen,mystery_collision[0])
                         pygame.mixer.Channel(6).play(pygame.mixer.Sound('resources/sounds/coin.wav'))
                         entity_gamemaster.coin.add(coin)
-                        viewport.add(entity_gamemaster.coin)             
+                        viewport.add(entity_gamemaster.coin)
+                        mario.gui.coin_counter += 1
+                        mario.gui.update_coin_counter_text()
+                        mario.gui.score += 200
+                        mario.gui.update_score_text()
                     elif mystery_collision[0].id == 6:
                         mushroom = Mushroom(screen,platforms_top,left_walls,right_walls,mystery_collision[0])
                         pygame.mixer.Channel(7).play(pygame.mixer.Sound('resources/sounds/powerup_appears.wav'))
@@ -142,6 +146,8 @@ def check_collisions(screen,mario, platforms_top, platforms_bottom, left_walls, 
                         pygame.mixer.Channel(7).play(pygame.mixer.Sound('resources/sounds/break.wav'))
                         top_collision[0].rect.y -= 23
                         top_collision[0].kill()
+                        mario.gui.score += 50
+                        mario.gui.update_score_text()
                 
                     else:
                         pygame.mixer.Channel(7).play(pygame.mixer.Sound('resources/sounds/bump.wav'))

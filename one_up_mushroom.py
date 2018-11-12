@@ -20,26 +20,20 @@ class OneUpMushroom(Sprite):
         self.rect.center = (400, 0)
         self.centerx = self.rect.centerx
         self.centery = self.rect.centery
-        self.previous_centery = self.centery
 
-        self.velocity_x = 0
+        self.velocity_x = 1
         self.velocity_y = 0.1
-        self.gravity = 0.001
-        self.horizontal_speed = 0.2
+        self.gravity = 0.15
+        self.horizontal_speed = 2
 
     def update(self):
-        self.previous_centery = self.centery
-
         self.centerx += self.velocity_x
-
         self.centery += self.velocity_y
         self.velocity_y += self.gravity
 
         colliding_with_floor = pygame.sprite.spritecollideany(self, self.platform_tops)
         if colliding_with_floor:
-            self.velocity_x = self.horizontal_speed
             self.velocity_y = 0
-            self.centery = self.previous_centery
 
         colliding_with_right_wall = pygame.sprite.spritecollideany(self, self.right_walls)
         if colliding_with_right_wall:

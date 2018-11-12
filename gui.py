@@ -23,6 +23,9 @@ class GUI:
         self.coin_counter_image = None
         self.coin_counter_rect = None
 
+        self.coin_image = pygame.image.load('resources/Images/coin.gif')
+        self.coin_rect = self.coin_image.get_rect()
+
         self.world_text = "WORLD"
         self.world_text_image = None
         self.world_text_rect = None
@@ -43,6 +46,7 @@ class GUI:
         self.update_name_text()
         self.update_score_text()
         self.update_coin_counter_text()
+        self.update_coin_image()
         self.update_world_text()
         self.update_level_name_text()
         self.update_timer_name_text()
@@ -67,6 +71,10 @@ class GUI:
         self.coin_counter_rect = self.coin_counter_image.get_rect()
         self.coin_counter_rect.left = self.screen_rect.right * 0.36
         self.coin_counter_rect.top = 50
+
+    def update_coin_image(self):
+        self.coin_rect.right = self.coin_counter_rect.left - 10
+        self.coin_rect.top = 50
 
     def update_world_text(self):
         self.world_text_image = self.font.render(self.world_text, True, self.text_color, self.text_background_color)
@@ -98,6 +106,7 @@ class GUI:
         self.screen.blit(self.name_image, self.name_rect)
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.coin_counter_image, self.coin_counter_rect)
+        self.screen.blit(self.coin_image, self.coin_rect)
         self.screen.blit(self.world_text_image, self.world_text_rect)
         self.screen.blit(self.level_name_image, self.level_name_rect)
         self.screen.blit(self.timer_name_image, self.timer_name_rect)
